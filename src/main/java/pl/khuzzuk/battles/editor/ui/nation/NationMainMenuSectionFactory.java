@@ -3,22 +3,31 @@ package pl.khuzzuk.battles.editor.ui.nation;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import lombok.experimental.UtilityClass;
 import pl.khuzzuk.battles.editor.api.Nation;
-import pl.khuzzuk.battles.editor.repo.Repo;
-import pl.khuzzuk.battles.editor.ui.MainMenu;
+import pl.khuzzuk.battles.editor.ui.UIContext;
 
+@UtilityClass
 public class NationMainMenuSectionFactory {
-    public static void createSection(MainMenu mainMenu, Repo repo) {
+    public static void createSection(UIContext ctx) {
         Label nationLabel = new Label("Nations");
-        mainMenu.place(nationLabel, 10, 50);
+        ctx.getMainMenu().place(nationLabel, 10, 50);
 
         ComboBox<Nation> nationSelector = new ComboBox<>();
         nationSelector.getItems().clear();
-        nationSelector.getItems().addAll(repo.getNations());
-        mainMenu.place(nationSelector, 100, 50);
+        nationSelector.getItems().addAll(ctx.getRepo().getNations());
+        ctx.getMainMenu().place(nationSelector, 100, 50);
 
         Button createNationButton = new Button("+");
-        createNationButton.setOnAction(event -> mainMenu.createNation());
-        mainMenu.place(createNationButton, 70, 50);
+        createNationButton.setOnAction(event -> nationEditor(ctx, nationSelector));
+        ctx.getMainMenu().place(createNationButton, 70, 50);
+    }
+
+    private static void nationEditor(UIContext ctx, ComboBox<Nation> nationSelector) {
+        Nation nation = nationSelector.getValue();
+        if (nation == null) {
+            nation = new Nation();
+        }
+        ctx.getNationMenu().refresh(nation, ctx.getSettingsRepo().getCurrentWorkingDirectory());
     }
 }

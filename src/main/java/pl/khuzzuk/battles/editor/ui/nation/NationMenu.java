@@ -1,25 +1,64 @@
 package pl.khuzzuk.battles.editor.ui.nation;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import lombok.AllArgsConstructor;
 import pl.khuzzuk.battles.editor.api.Nation;
-import pl.khuzzuk.battles.editor.ui.ContentPane;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
+import pl.khuzzuk.battles.editor.ui.UIContext;
 
-@AllArgsConstructor
+import java.nio.file.Path;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 public class NationMenu extends DirectPane {
-    private ContentPane pane;
+    private Label nameLabel = new Label("Name");
+    private TextField nameField = new TextField();
+    private Button backgroundFile = new Button();
+    private Button emblemFile = new Button();
+    private Button saveButton = new Button("Save");
 
-    public void refresh(DirectPane toReturn, Nation nation) {
-        pane.getChildren().clear();
-        pane.getChildren().add(this);
+    private Nation nation;
+    private Path directory;
+    private String backgroundPath;
+    private String emblemPath;
+
+    public NationMenu(UIContext uiContext) {
+        super(uiContext);
+    }
+
+    public void init() {
         getChildren().clear();
 
-        Label nameLabel = new Label("Name");
         place(nameLabel, 10, 10);
-
-        TextField nameField = new TextField(nation.getName());
         place(nameField, 100, 10);
+        place(backgroundFile, 10, 50);
+        place(emblemFile, 10, 100);
+        place(saveButton, 10, 200);
+
+        saveButton.setOnAction(event -> save());
+    }
+
+    public void refresh(Nation nation, Path directory) {
+        super.refresh();
+        this.nation = nation;
+        this.directory = directory;
+
+        nameField.setText(nation.getName());
+
+        backgroundPath = nation.getBackgroundImagePath();
+        backgroundFile.setText(isNotBlank(backgroundPath) ? backgroundPath : "Add background");
+
+        emblemPath = nation.getEmblemImagePath();
+        emblemFile.setText(isNotBlank(emblemPath) ? emblemPath : "Add emblem");
+    }
+
+    private void save() {
+        nation.setName(nameField.getText());
+        nation.setBackgroundImagePath(backgroundPath);
+        nation.setEmblemImagePath(emblemPath);
+
+        ctx.getRepo().saveNation(nation, directory);
+        toMainMenu();
     }
 }

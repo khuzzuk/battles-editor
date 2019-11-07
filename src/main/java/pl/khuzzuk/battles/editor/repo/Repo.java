@@ -9,10 +9,8 @@ import pl.khuzzuk.battles.editor.api.Nation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -32,10 +30,9 @@ public class Repo {
     }
 
     private void loadNations(Path directory) {
-        try (Stream<Path> files = Files.walk(directory)){
-            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:*.json");
-            files.filter(path -> Files.isRegularFile(path))
-                    .filter(pathMatcher::matches)
+        try (Stream<Path> files = Files.walk(directory, 1)){
+            files.filter(Files::isRegularFile)
+                    .filter(path -> path.toString().endsWith(".json"))
             .forEach(path -> loadNation(path, directory));
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,7 +48,7 @@ public class Repo {
         }
     }
 
-    private void saveNation(Nation nation, Path directory) {
+    public void saveNation(Nation nation, Path directory) {
         nations.add(nation);
         Path nationPath = directory.resolve(Path.of(nation.getName() + ".json"));
         try (OutputStream output = Files.newOutputStream(nationPath)){

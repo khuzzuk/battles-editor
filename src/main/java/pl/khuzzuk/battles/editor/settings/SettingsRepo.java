@@ -38,4 +38,8 @@ public class SettingsRepo {
             return new Settings();
         }
     }
+
+    public Path getCurrentWorkingDirectory() {
+        return Path.of(settings.getWorkingDirectory());
+    }
 }

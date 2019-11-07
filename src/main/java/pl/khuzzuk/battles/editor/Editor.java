@@ -12,6 +12,7 @@ import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.ContentPane;
 import pl.khuzzuk.battles.editor.ui.MainMenu;
+import pl.khuzzuk.battles.editor.ui.UIContext;
 
 import java.nio.file.Path;
 
@@ -22,8 +23,11 @@ public class Editor extends Application {
         stage.setMaximized(true);
 
         ContentPane mainContainer = new ContentPane();
+        UIContext ctx = new UIContext();
+        ctx.setSettingsRepo(settingsRepo());
+        ctx.setRepo(repo(ctx));
 
-        MainMenu mainMenu = mainMenu(mainContainer, settingsRepo());
+        MainMenu mainMenu = mainMenu(ctx);
         mainContainer.getChildren().addAll(mainMenu);
 
         MenuBar menuBar = menuBar(mainMenu, mainContainer);
@@ -51,8 +55,8 @@ public class Editor extends Application {
         return menuBar;
     }
 
-    private static MainMenu mainMenu(ContentPane pane, SettingsRepo settingsRepo) {
-        MainMenu mainMenu = new MainMenu(pane, settingsRepo, repo(settingsRepo));
+    private static MainMenu mainMenu(UIContext uiContext) {
+        MainMenu mainMenu = new MainMenu(uiContext);
         mainMenu.refresh();
         return mainMenu;
     }
@@ -63,9 +67,9 @@ public class Editor extends Application {
         return repo;
     }
 
-    private static Repo repo(SettingsRepo settingsRepo) {
-        if (settingsRepo.loadSettings().getWorkingDirectory() != null) {
-            return Repo.repoFor(Path.of(settingsRepo.loadSettings().getWorkingDirectory()));
+    private static Repo repo(UIContext uiContext) {
+        if (uiContext.getSettingsRepo().loadSettings().getWorkingDirectory() != null) {
+            return Repo.repoFor(Path.of(uiContext.getSettingsRepo().loadSettings().getWorkingDirectory()));
         } else {
             return new Repo();
         }
