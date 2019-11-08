@@ -1,6 +1,7 @@
 package pl.khuzzuk.battles.editor.ui;
 
 import lombok.Data;
+import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.nation.NationMenu;
@@ -12,4 +13,5 @@ public class UIContext {
     private ContentPane contentPane;
     private MainMenu mainMenu;
     private NationMenu nationMenu;
+    private NationService nationService;
 }

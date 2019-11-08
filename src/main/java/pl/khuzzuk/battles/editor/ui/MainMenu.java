@@ -13,15 +13,14 @@ import java.io.File;
 import java.nio.file.Path;
 
 public class MainMenu extends DirectPane {
-    private Repo repo;
-
     public MainMenu(UIContext ctx) {
         super(ctx);
+        ctx.setMainMenu(this);
         ctx.setNationMenu(new NationMenu(ctx));
-        ctx.getNationMenu().init();
     }
 
 
+    @Override
     public void refresh() {
         getChildren().clear();
 
@@ -30,7 +29,7 @@ public class MainMenu extends DirectPane {
             selectDirectory.setOnAction(event -> selectDirectory());
             getChildren().add(selectDirectory);
         } else {
-            CardMainMenuSectionFactory.createSection(this, repo);
+            CardMainMenuSectionFactory.createSection(ctx);
             NationMainMenuSectionFactory.createSection(ctx);
         }
     }
@@ -40,7 +39,7 @@ public class MainMenu extends DirectPane {
         File file = directoryChooser.showDialog(getScene().getWindow());
         ctx.getSettingsRepo().loadSettings().setWorkingDirectory(file.toString());
         ctx.getSettingsRepo().storeSettings();
-        repo = Repo.repoFor(Path.of(ctx.getSettingsRepo().loadSettings().getWorkingDirectory()));
+        ctx.setRepo(Repo.repoFor(Path.of(ctx.getSettingsRepo().loadSettings().getWorkingDirectory())));
         refresh();
     }
 
