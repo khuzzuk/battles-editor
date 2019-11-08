@@ -17,6 +17,7 @@ public class MainMenu extends DirectPane {
         super(ctx);
         ctx.setMainMenu(this);
         ctx.setNationMenu(new NationMenu(ctx));
+        ctx.setCardMenu(new CardMenu(ctx));
     }
 
 
@@ -29,8 +30,8 @@ public class MainMenu extends DirectPane {
             selectDirectory.setOnAction(event -> selectDirectory());
             getChildren().add(selectDirectory);
         } else {
-            CardMainMenuSectionFactory.createSection(ctx);
             NationMainMenuSectionFactory.createSection(ctx);
+            CardMainMenuSectionFactory.createSection(ctx);
         }
     }
 

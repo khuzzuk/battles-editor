@@ -8,6 +8,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import pl.khuzzuk.battles.editor.card.CardService;
 import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
@@ -26,6 +27,7 @@ public class Editor extends Application {
         ContentPane mainContainer = new ContentPane();
         UIContext ctx = new UIContext();
         ctx.setNationService(new NationService(ctx));
+        ctx.setCardService(new CardService());
         ctx.setContentPane(mainContainer);
         ctx.setSettingsRepo(settingsRepo());
         ctx.setRepo(repo(ctx));

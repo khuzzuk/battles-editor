@@ -14,8 +14,10 @@ public class NationMainMenuSectionFactory {
         ctx.getMainMenu().place(nationLabel, 10, 50);
 
         ComboBox<Nation> nationSelector = new ComboBox<>();
+        ctx.setNationSelector(nationSelector);
         nationSelector.getItems().clear();
         nationSelector.getItems().addAll(ctx.getRepo().getNations());
+        nationSelector.valueProperty().addListener((obs, prev, nation) -> onNationSelection(nation, ctx));
         ctx.getMainMenu().place(nationSelector, 100, 50);
 
         Button createNationButton = new Button("+");
@@ -29,5 +31,10 @@ public class NationMainMenuSectionFactory {
             nation = new Nation();
         }
         ctx.getNationMenu().refresh(nation, ctx.getSettingsRepo().getCurrentWorkingDirectory());
+    }
+
+    private static void onNationSelection(Nation nation, UIContext ctx) {
+        ctx.getNationService().assureNationDirectory(nation);
+        ctx.getRepo().getCardsByNation(nation);
     }
 }
