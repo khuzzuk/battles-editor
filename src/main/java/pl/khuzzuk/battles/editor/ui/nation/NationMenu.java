@@ -4,6 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.api.Nation;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.UIContext;
@@ -12,6 +13,7 @@ import java.nio.file.Path;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+@Component
 public class NationMenu extends DirectPane {
     private Label nameLabel = new Label("Name");
     private TextField nameField = new TextField();
@@ -25,8 +27,7 @@ public class NationMenu extends DirectPane {
     private String backgroundPath;
     private String emblemPath;
 
-    public NationMenu(UIContext uiContext) {
-        super(uiContext);
+    public NationMenu() {
         nationView = new NationView(uiContext);
 
         place(nameLabel, 10, 10);

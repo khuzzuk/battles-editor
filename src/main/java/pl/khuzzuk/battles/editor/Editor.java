@@ -8,6 +8,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import pl.khuzzuk.battles.editor.card.CardService;
 import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.repo.Repo;
@@ -18,30 +21,33 @@ import pl.khuzzuk.battles.editor.ui.UIContext;
 
 import java.nio.file.Path;
 
+@SpringBootApplication
 public class Editor extends Application {
+    private ConfigurableApplicationContext context;
+
     @Override
     public void start(Stage stage) {
         stage.setTitle("Battles Editor");
         stage.setMaximized(true);
 
-        ContentPane mainContainer = new ContentPane();
         UIContext ctx = new UIContext();
         ctx.setNationService(new NationService(ctx));
         ctx.setCardService(new CardService());
-        ctx.setContentPane(mainContainer);
         ctx.setSettingsRepo(settingsRepo());
         ctx.setRepo(repo(ctx));
 
-        MainMenu mainMenu = mainMenu(ctx);
-        mainContainer.getChildren().addAll(mainMenu);
-
-        MenuBar menuBar = menuBar(mainMenu, mainContainer);
-
-        VBox root = new VBox();
-        root.getChildren().addAll(menuBar, mainContainer);
-
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(context.getBean("root", VBox.class)));
         stage.show();
+    }
+
+    @Override
+    public void init() throws Exception {
+        context = SpringApplication.run(Editor.class);
+    }
+
+    @Override
+    public void stop() throws Exception {
+        context.stop();
     }
 
     private static MenuBar menuBar(MainMenu mainMenu, Pane parent) {

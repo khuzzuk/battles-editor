@@ -1,25 +1,25 @@
 package pl.khuzzuk.battles.editor.settings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import lombok.Getter;
+import org.springframework.beans.factory.InitializingBean;
 
-public class SettingsRepo {
+public class SettingsRepo implements InitializingBean {
     private static final Path SETTINGS_PATH = Paths.get("settings.json");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    @Getter
     private Settings settings;
 
-    public Settings loadSettings() {
-        if (settings == null) {
-            settings = readSettingsFromFile();
-        }
-        return settings;
+    @Override
+    public void afterPropertiesSet() {
+        settings = readSettingsFromFile();
     }
 
     public void storeSettings() {

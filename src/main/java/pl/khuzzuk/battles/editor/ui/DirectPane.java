@@ -2,11 +2,13 @@ package pl.khuzzuk.battles.editor.ui;
 
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@AllArgsConstructor
-public class DirectPane extends AnchorPane {
-    protected final UIContext ctx;
+public abstract class DirectPane extends AnchorPane {
+    @Autowired
+    private MainMenu mainMenu;
+    @Autowired
+    ContentPane contentPane;
 
     public void place(Node node, double x, double y) {
         AnchorPane.setLeftAnchor(node, x);
@@ -15,11 +17,11 @@ public class DirectPane extends AnchorPane {
     }
 
     protected void toMainMenu() {
-        ctx.getMainMenu().refresh();
-        ctx.getContentPane().getChildren().setAll(ctx.getMainMenu());
+        mainMenu.refresh();
+        contentPane.getChildren().setAll(mainMenu);
     }
 
     public void refresh() {
-        ctx.getContentPane().getChildren().setAll(this);
+        contentPane.getChildren().setAll(this);
     }
 }

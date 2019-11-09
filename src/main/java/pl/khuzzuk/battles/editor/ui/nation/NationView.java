@@ -5,20 +5,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.api.Nation;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.HeaderView;
-import pl.khuzzuk.battles.editor.ui.UIContext;
 import pl.khuzzuk.battles.editor.ui.WithEffects;
 
+@Component
 class NationView extends DirectPane implements WithEffects {
     private Rectangle backElement = new Rectangle(731, 1181);
     private Rectangle emblemBorderElement = new Rectangle(260, 260);
     private Rectangle emblemElement = new Rectangle(250, 250);
+    @Autowired
     private HeaderView headerView;
 
-    NationView(UIContext ctx) {
-        super(ctx);
+    NationView() {
         headerView = new HeaderView(ctx);
 
         place(backElement, 0, 0);

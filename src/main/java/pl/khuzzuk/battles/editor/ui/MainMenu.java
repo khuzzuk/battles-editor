@@ -2,8 +2,12 @@ package pl.khuzzuk.battles.editor.ui;
 
 import javafx.scene.control.Button;
 import javafx.stage.DirectoryChooser;
+import javax.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.api.Card;
 import pl.khuzzuk.battles.editor.repo.Repo;
+import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.card.CardMainMenuSectionFactory;
 import pl.khuzzuk.battles.editor.ui.card.CardMenu;
 import pl.khuzzuk.battles.editor.ui.nation.NationMainMenuSectionFactory;
@@ -12,20 +16,17 @@ import pl.khuzzuk.battles.editor.ui.nation.NationMenu;
 import java.io.File;
 import java.nio.file.Path;
 
+@AllArgsConstructor
+@Component
 public class MainMenu extends DirectPane {
-    public MainMenu(UIContext ctx) {
-        super(ctx);
-        ctx.setMainMenu(this);
-        ctx.setNationMenu(new NationMenu(ctx));
-        ctx.setCardMenu(new CardMenu(ctx));
-    }
+    private Repo repo;
+    private SettingsRepo settingsRepo;
 
-
+    @PostConstruct
     @Override
     public void refresh() {
         getChildren().clear();
-
-        if (ctx.getSettingsRepo().loadSettings().getWorkingDirectory() == null) {
+        if (settingsRepo.loadSettings().getWorkingDirectory() == null) {
             Button selectDirectory = new Button("Choose directory");
             selectDirectory.setOnAction(event -> selectDirectory());
             getChildren().add(selectDirectory);

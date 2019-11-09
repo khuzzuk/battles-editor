@@ -4,14 +4,15 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HeaderView extends DirectPane implements WithEffects, WithText {
     private Rectangle outer = new Rectangle(260, 70);
     private Rectangle inner = new Rectangle(250, 60);
     private VBox textArea = new VBox(10);
 
-    public HeaderView(UIContext ctx) {
-        super(ctx);
+    public HeaderView() {
         place(outer, 0, 0);
         place(inner, 5, 5);
         place(textArea, 5, -10);
