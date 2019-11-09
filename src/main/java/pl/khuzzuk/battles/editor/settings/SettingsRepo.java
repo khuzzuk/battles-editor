@@ -1,28 +1,31 @@
 package pl.khuzzuk.battles.editor.settings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Repository;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import lombok.Getter;
-import org.springframework.beans.factory.InitializingBean;
 
+@RequiredArgsConstructor
+@Repository
 public class SettingsRepo implements InitializingBean {
     private static final Path SETTINGS_PATH = Paths.get("settings.json");
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    @Getter
     private Settings settings;
 
     @Override
-    public void afterPropertiesSet() {
+    public void afterPropertiesSet() throws IOException {
         settings = readSettingsFromFile();
     }
 
-    public void storeSettings() {
+    private void storeSettings() {
         try (OutputStream output = Files.newOutputStream(SETTINGS_PATH)) {
             OBJECT_MAPPER.writeValue(output, settings);
         } catch (IOException e) {
@@ -39,7 +42,17 @@ public class SettingsRepo implements InitializingBean {
         }
     }
 
+    public void setCurrentWorkingDirectory(Path directory) {
+        Path absDir = directory.toAbsolutePath();
+        settings.setWorkingDirectory(absDir.toString());
+        storeSettings();
+    }
+
+    public boolean hasCurrentWorkingDirectory() {
+        return settings.getWorkingDirectory() != null;
+    }
+
     public Path getCurrentWorkingDirectory() {
-        return Path.of(settings.getWorkingDirectory());
+        return settings.getWorkingDirectory() != null ? Path.of(settings.getWorkingDirectory()) : null;
     }
 }

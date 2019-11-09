@@ -5,24 +5,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.HeaderView;
 import pl.khuzzuk.battles.editor.ui.WithEffects;
 
+@RequiredArgsConstructor
 @Component
-class NationView extends DirectPane implements WithEffects {
+class NationView extends DirectPane implements WithEffects, InitializingBean {
+    private final NationService nationService;
+
+    private HeaderView headerView = new HeaderView();
     private Rectangle backElement = new Rectangle(731, 1181);
     private Rectangle emblemBorderElement = new Rectangle(260, 260);
     private Rectangle emblemElement = new Rectangle(250, 250);
-    @Autowired
-    private HeaderView headerView;
 
-    NationView() {
-        headerView = new HeaderView(ctx);
-
+    @Override
+    public void afterPropertiesSet() {
         place(backElement, 0, 0);
         backElement.setStrokeWidth(0);
 
@@ -44,7 +47,7 @@ class NationView extends DirectPane implements WithEffects {
     void refresh(Nation nation) {
         Paint backgroundPattern = Color.BLACK;
         if (nation.getBackgroundImagePath() != null) {
-            Image background = new Image(ctx.getNationService().getBackgroundUrl(nation));
+            Image background = new Image(nationService.getBackgroundUrl(nation));
             backgroundPattern = new ImagePattern(background, 0, 0, 1, 1, true);
         }
         backElement.setFill(backgroundPattern);
@@ -53,9 +56,8 @@ class NationView extends DirectPane implements WithEffects {
 
         Paint emblemPattern = Color.BLACK;
         if (nation.getEmblemImagePath() != null) {
-            emblemPattern = new ImagePattern(new Image(ctx.getNationService().getEmblemUrl(nation)), 0, 0, 1, 1, true);
+            emblemPattern = new ImagePattern(new Image(nationService.getEmblemUrl(nation)), 0, 0, 1, 1, true);
         }
         emblemElement.setFill(emblemPattern);
-
     }
 }

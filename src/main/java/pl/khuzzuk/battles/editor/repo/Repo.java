@@ -1,35 +1,54 @@
 package pl.khuzzuk.battles.editor.repo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Repository;
 import pl.khuzzuk.battles.editor.api.Card;
 import pl.khuzzuk.battles.editor.api.Equipment;
 import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Getter
-public class Repo {
+@AllArgsConstructor
+@Repository
+public class Repo implements InitializingBean {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    private final SettingsRepo settingsRepo;
+
+    @Getter
     private Set<Card> cards = new HashSet<>();
+    @Getter
     private Set<Nation> nations = new HashSet<>();
+    @Getter
     private Set<Equipment> equipment = new HashSet<>();
 
-    public static Repo repoFor(Path directory) {
-        Repo repo = new Repo();
-        repo.loadNations(directory);
-        repo.loadCards(directory);
-        return repo;
+    @Override
+    public void afterPropertiesSet() {
+        if (settingsRepo.hasCurrentWorkingDirectory()) {
+            updateDirectory(settingsRepo.getCurrentWorkingDirectory());
+        }
+    }
+
+    public void updateDirectory(Path directory) {
+        cards.clear();
+        nations.clear();
+        equipment.clear();
+
+        loadNations(directory);
+        loadCards(directory);
     }
 
     public Nation getNationByName(String name) {

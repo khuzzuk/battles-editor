@@ -1,9 +1,10 @@
 package pl.khuzzuk.battles.editor.card;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import lombok.AllArgsConstructor;
 import pl.khuzzuk.battles.editor.api.Card;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @AllArgsConstructor
 public class CardService {

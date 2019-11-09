@@ -3,10 +3,13 @@ package pl.khuzzuk.battles.editor.ui;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 public abstract class DirectPane extends AnchorPane {
     @Autowired
+    @Lazy
     private MainMenu mainMenu;
+    @Lazy
     @Autowired
     ContentPane contentPane;
 

@@ -11,15 +11,7 @@ import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import pl.khuzzuk.battles.editor.card.CardService;
-import pl.khuzzuk.battles.editor.nation.NationService;
-import pl.khuzzuk.battles.editor.repo.Repo;
-import pl.khuzzuk.battles.editor.settings.SettingsRepo;
-import pl.khuzzuk.battles.editor.ui.ContentPane;
 import pl.khuzzuk.battles.editor.ui.MainMenu;
-import pl.khuzzuk.battles.editor.ui.UIContext;
-
-import java.nio.file.Path;
 
 @SpringBootApplication
 public class Editor extends Application {
@@ -30,13 +22,8 @@ public class Editor extends Application {
         stage.setTitle("Battles Editor");
         stage.setMaximized(true);
 
-        UIContext ctx = new UIContext();
-        ctx.setNationService(new NationService(ctx));
-        ctx.setCardService(new CardService());
-        ctx.setSettingsRepo(settingsRepo());
-        ctx.setRepo(repo(ctx));
-
-        stage.setScene(new Scene(context.getBean("root", VBox.class)));
+        VBox root = context.getBean("root", VBox.class);
+        stage.setScene(new Scene(root));
         stage.show();
     }
 
@@ -64,26 +51,6 @@ public class Editor extends Application {
 
         menuBar.getMenus().add(main);
         return menuBar;
-    }
-
-    private static MainMenu mainMenu(UIContext uiContext) {
-        MainMenu mainMenu = new MainMenu(uiContext);
-        mainMenu.refresh();
-        return mainMenu;
-    }
-
-    private static SettingsRepo settingsRepo() {
-        SettingsRepo repo = new SettingsRepo();
-        repo.loadSettings();
-        return repo;
-    }
-
-    private static Repo repo(UIContext uiContext) {
-        if (uiContext.getSettingsRepo().loadSettings().getWorkingDirectory() != null) {
-            return Repo.repoFor(Path.of(uiContext.getSettingsRepo().loadSettings().getWorkingDirectory()));
-        } else {
-            return new Repo();
-        }
     }
 
     public static void main(String[] args) {

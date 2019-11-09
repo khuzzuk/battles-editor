@@ -4,32 +4,38 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.repo.Repo;
+import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
-import pl.khuzzuk.battles.editor.ui.UIContext;
 
 import java.nio.file.Path;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+@RequiredArgsConstructor
 @Component
-public class NationMenu extends DirectPane {
+public class NationMenu extends DirectPane implements InitializingBean {
+    private final NationView nationView;
+    private final SettingsRepo settingsRepo;
+    private final Repo repo;
+
     private Label nameLabel = new Label("Name");
     private TextField nameField = new TextField();
     private Button backgroundFile = new Button();
     private Button emblemFile = new Button();
     private Button saveButton = new Button("Save");
-    private NationView nationView;
 
     private Nation nation;
     private Path directory;
     private String backgroundPath;
     private String emblemPath;
 
-    public NationMenu() {
-        nationView = new NationView(uiContext);
-
+    @Override
+    public void afterPropertiesSet() {
         place(nameLabel, 10, 10);
         place(nameField, 100, 10);
         place(backgroundFile, 10, 50);
@@ -71,9 +77,9 @@ public class NationMenu extends DirectPane {
 
     private Path chooseFile() {
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(ctx.getSettingsRepo().getCurrentWorkingDirectory().toFile());
+        fileChooser.setInitialDirectory(settingsRepo.getCurrentWorkingDirectory().toFile());
         final Path file = fileChooser.showOpenDialog(getScene().getWindow()).toPath();
-        return ctx.getSettingsRepo().getCurrentWorkingDirectory().relativize(file);
+        return settingsRepo.getCurrentWorkingDirectory().relativize(file);
     }
 
     private void save() {
@@ -81,7 +87,7 @@ public class NationMenu extends DirectPane {
         nation.setBackgroundImagePath(backgroundPath);
         nation.setEmblemImagePath(emblemPath);
 
-        ctx.getRepo().saveNation(nation, directory);
+        repo.saveNation(nation, directory);
         toMainMenu();
     }
 }

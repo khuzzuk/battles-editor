@@ -1,8 +1,9 @@
 package pl.khuzzuk.battles.editor.nation;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import pl.khuzzuk.battles.editor.api.Nation;
-import pl.khuzzuk.battles.editor.ui.UIContext;
+import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,20 +11,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @AllArgsConstructor
+@Service
 public class NationService {
-    UIContext ctx;
+    private SettingsRepo settingsRepo;
 
     public String getBackgroundUrl(Nation nation) {
-        return getUrl(ctx.getSettingsRepo().getCurrentWorkingDirectory(), nation.getBackgroundImagePath());
+        return getUrl(settingsRepo.getCurrentWorkingDirectory(), nation.getBackgroundImagePath());
     }
 
     public String getEmblemUrl(Nation nation) {
-        return getUrl(ctx.getSettingsRepo().getCurrentWorkingDirectory(), nation.getEmblemImagePath());
+        return getUrl(settingsRepo.getCurrentWorkingDirectory(), nation.getEmblemImagePath());
     }
 
     public void assureNationDirectory(Nation nation) {
         Path nationDir = Paths.get(nation.getName());
-        Path destination = ctx.getSettingsRepo().getCurrentWorkingDirectory().resolve(nationDir);
+        Path destination = settingsRepo.getCurrentWorkingDirectory().resolve(nationDir);
         if (!Files.exists(destination)) {
             try {
                 Files.createDirectory(destination);

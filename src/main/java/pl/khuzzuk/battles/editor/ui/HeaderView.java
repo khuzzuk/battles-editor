@@ -4,9 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import org.springframework.stereotype.Component;
 
-@Component
 public class HeaderView extends DirectPane implements WithEffects, WithText {
     private Rectangle outer = new Rectangle(260, 70);
     private Rectangle inner = new Rectangle(250, 60);
