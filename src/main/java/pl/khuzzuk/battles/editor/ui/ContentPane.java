@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContentPane extends VBox implements InitializingBean {
   private MainMenu mainMenu;
+  private UIBridge uiBridge;
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     getChildren().add(mainMenu);
+    uiBridge.setContentPane(this);
   }
 }

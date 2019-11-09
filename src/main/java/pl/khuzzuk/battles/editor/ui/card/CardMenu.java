@@ -25,7 +25,7 @@ public class CardMenu extends DirectPane implements InitializingBean {
     private Card card;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         place(back, 10, 10);
         place(new Label("Name"), 10, 50);
         place(nameField, 50, 50);

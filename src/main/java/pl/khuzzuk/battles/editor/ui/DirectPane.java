@@ -3,15 +3,10 @@ package pl.khuzzuk.battles.editor.ui;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 
 public abstract class DirectPane extends AnchorPane {
     @Autowired
-    @Lazy
-    private MainMenu mainMenu;
-    @Lazy
-    @Autowired
-    ContentPane contentPane;
+    private UIBridge uiBridge;
 
     public void place(Node node, double x, double y) {
         AnchorPane.setLeftAnchor(node, x);
@@ -20,11 +15,10 @@ public abstract class DirectPane extends AnchorPane {
     }
 
     protected void toMainMenu() {
-        mainMenu.refresh();
-        contentPane.getChildren().setAll(mainMenu);
+        uiBridge.getContentPane().getChildren().setAll(uiBridge.getMainMenu());
     }
 
     public void refresh() {
-        contentPane.getChildren().setAll(this);
+        uiBridge.getContentPane().getChildren().setAll(this);
     }
 }
