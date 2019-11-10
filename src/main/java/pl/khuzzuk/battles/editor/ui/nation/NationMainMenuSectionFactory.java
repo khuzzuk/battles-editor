@@ -5,7 +5,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;

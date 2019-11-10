@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.HeaderView;
@@ -19,7 +19,7 @@ import pl.khuzzuk.battles.editor.ui.WithEffects;
 class NationView extends DirectPane implements WithEffects, InitializingBean {
     private final NationService nationService;
 
-    private HeaderView headerView = new HeaderView();
+    private HeaderView headerView = new HeaderView(260, 70);
     private Rectangle backElement = new Rectangle(731, 1181);
     private Rectangle emblemBorderElement = new Rectangle(260, 260);
     private Rectangle emblemElement = new Rectangle(250, 250);

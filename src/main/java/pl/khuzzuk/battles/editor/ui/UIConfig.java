@@ -8,8 +8,8 @@ import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.khuzzuk.battles.editor.api.Card;
-import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.card.Card;
+import pl.khuzzuk.battles.editor.nation.Nation;
 
 @Configuration
 public class UIConfig {

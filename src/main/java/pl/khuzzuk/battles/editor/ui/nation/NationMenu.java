@@ -1,5 +1,9 @@
 package pl.khuzzuk.battles.editor.ui.nation;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.io.File;
+import java.nio.file.Path;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -7,14 +11,10 @@ import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
-
-import java.nio.file.Path;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @RequiredArgsConstructor
 @Component
@@ -76,10 +76,10 @@ public class NationMenu extends DirectPane implements InitializingBean {
     }
 
     private Path chooseFile() {
-        final FileChooser fileChooser = new FileChooser();
+        FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(settingsRepo.getCurrentWorkingDirectory().toFile());
-        final Path file = fileChooser.showOpenDialog(getScene().getWindow()).toPath();
-        return settingsRepo.getCurrentWorkingDirectory().relativize(file);
+        File file = fileChooser.showOpenDialog(getScene().getWindow());
+        return settingsRepo.getCurrentWorkingDirectory().relativize(file.toPath());
     }
 
     private void save() {

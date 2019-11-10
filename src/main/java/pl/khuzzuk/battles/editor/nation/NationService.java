@@ -1,41 +1,39 @@
 package pl.khuzzuk.battles.editor.nation;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import pl.khuzzuk.battles.editor.api.Nation;
-import pl.khuzzuk.battles.editor.settings.SettingsRepo;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import pl.khuzzuk.battles.editor.settings.SettingsRepo;
+import pl.khuzzuk.battles.editor.util.UrlUtils;
 
 @AllArgsConstructor
 @Service
 public class NationService {
-    private SettingsRepo settingsRepo;
 
-    public String getBackgroundUrl(Nation nation) {
-        return getUrl(settingsRepo.getCurrentWorkingDirectory(), nation.getBackgroundImagePath());
-    }
+  private SettingsRepo settingsRepo;
 
-    public String getEmblemUrl(Nation nation) {
-        return getUrl(settingsRepo.getCurrentWorkingDirectory(), nation.getEmblemImagePath());
-    }
+  public String getBackgroundUrl(Nation nation) {
+    return UrlUtils
+        .resolveUrl(settingsRepo.getCurrentWorkingDirectory(), nation.getBackgroundImagePath());
+  }
 
-    public void assureNationDirectory(Nation nation) {
-        Path nationDir = Paths.get(nation.getName());
-        Path destination = settingsRepo.getCurrentWorkingDirectory().resolve(nationDir);
-        if (!Files.exists(destination)) {
-            try {
-                Files.createDirectory(destination);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+  public String getEmblemUrl(Nation nation) {
+    return UrlUtils
+        .resolveUrl(settingsRepo.getCurrentWorkingDirectory(), nation.getEmblemImagePath());
+  }
 
-    private static String getUrl(Path dir, String file) {
-        return dir.resolve(file).toFile().toURI().toString();
+  public void assureNationDirectory(Nation nation) {
+    Path nationDir = Paths.get(nation.getName());
+    Path destination = settingsRepo.getCurrentWorkingDirectory().resolve(nationDir);
+    if (!Files.exists(destination)) {
+      try {
+        Files.createDirectory(destination);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
+  }
 }

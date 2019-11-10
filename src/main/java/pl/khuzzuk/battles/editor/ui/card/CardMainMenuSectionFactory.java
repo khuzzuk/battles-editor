@@ -5,8 +5,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.khuzzuk.battles.editor.api.Card;
-import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.card.Card;
+import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.ui.MainMenu;
@@ -22,19 +22,16 @@ public class CardMainMenuSectionFactory {
 
   public void createSection(MainMenu mainMenu) {
     Label cardLabel = new Label("Cards");
-    mainMenu.place(cardLabel, 10, 10);
-
-    ComboBox<Card> cardSelector = new ComboBox<>();
-    cardSelector.getItems().clear();
-    cardSelector.getItems().addAll(repo.getCards());
-    mainMenu.place(cardSelector, 100, 10);
-
     Button addCardButton = new Button("+");
-    addCardButton.setDisable(true);
+
+    mainMenu.place(cardLabel, 10, 10);
+    mainMenu.place(cardSelector, 100, 10);
+    mainMenu.place(addCardButton, 70, 10);
+
     nationSelector.valueProperty().addListener(
         (obs, prev, next) -> onNationSelection(next, addCardButton, cardSelector));
+    addCardButton.setDisable(true);
     addCardButton.setOnAction(event -> cardEditor());
-    mainMenu.place(addCardButton, 70, 10);
   }
 
   private void cardEditor() {

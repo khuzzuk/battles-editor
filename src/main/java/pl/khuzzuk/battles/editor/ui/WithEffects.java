@@ -13,8 +13,9 @@ public interface WithEffects {
     }
 
     default void addInnerShadow(Shape shape) {
+        double width = shape.getBoundsInLocal().getWidth();
         InnerShadow innerShadow = new InnerShadow(10, 0, 0, Color.BLACK);
-        Light.Point light = new Light.Point(125, 125, 250, Color.WHITE);
+        Light.Point light = new Light.Point(width / 2, width / 2, width, Color.WHITE);
         Lighting lighting = new Lighting(light);
         innerShadow.setInput(lighting);
         shape.setEffect(innerShadow);

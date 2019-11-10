@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
-import pl.khuzzuk.battles.editor.api.Card;
-import pl.khuzzuk.battles.editor.api.Equipment;
-import pl.khuzzuk.battles.editor.api.Nation;
+import pl.khuzzuk.battles.editor.card.Card;
+import pl.khuzzuk.battles.editor.equipment.Equipment;
+import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 
 import java.io.BufferedReader;

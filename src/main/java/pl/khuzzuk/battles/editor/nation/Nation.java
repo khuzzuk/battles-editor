@@ -1,4 +1,4 @@
-package pl.khuzzuk.battles.editor.api;
+package pl.khuzzuk.battles.editor.nation;
 
 import lombok.Data;
 
