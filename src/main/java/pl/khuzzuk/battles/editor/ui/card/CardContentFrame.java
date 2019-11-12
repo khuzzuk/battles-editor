@@ -11,12 +11,14 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
-import javafx.scene.shape.Rectangle;
+import pl.khuzzuk.battles.editor.card.Card;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
+import pl.khuzzuk.battles.editor.ui.HexPlane;
 import pl.khuzzuk.battles.editor.ui.Hexagonal;
+import pl.khuzzuk.battles.editor.ui.IconPane;
 import pl.khuzzuk.battles.editor.ui.WithEffects;
 
-public class CardContentFrame extends DirectPane implements Hexagonal, WithEffects {
+public class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEffects {
 
   private final int hexR;
   private double frameScale;
@@ -30,14 +32,16 @@ public class CardContentFrame extends DirectPane implements Hexagonal, WithEffec
 
   private AnchorPane imageContainer = new AnchorPane();
   private ImageView imageView = new ImageView();
+  private IconPane iconPane;
 
   CardContentFrame(int hexR) {
     this.hexR = hexR;
     frameScale = hexR / 8d;
+    iconPane = new IconPane(hexR);
 
     MoveTo startingPoint = getStartingPoint(getCol(4, hexR), getRow(1, hexR), hexR, 5);
-    MoveTo innerStartingPoint = new MoveTo(translateX(startingPoint.getX(), 5),
-        translateY(startingPoint.getY(), 5));
+    MoveTo innerStartingPoint = new MoveTo(translateX(startingPoint.getX(), 5, frameScale),
+        translateY(startingPoint.getY(), 5, frameScale));
 
     oE.add(startingPoint);
     iE.add(innerStartingPoint);
@@ -71,33 +75,38 @@ public class CardContentFrame extends DirectPane implements Hexagonal, WithEffec
 
     place(outer, 0, 0);
     place(inner, frameScale, frameScale);
-    //place(image, frameScale, frameScale);
-    image.setFill(Color.BLACK);
-    imageContainer.setClip(image);
     place(imageContainer, -frameScale * 7 - 1, -frameScale * 5);
+    place(iconPane, 0, 0);
 
     addDropShadow(outer);
     addInnerShadow(inner);
-    //addInnerShadow(image);
     inner.setStrokeWidth(0);
     outer.setStrokeWidth(0);
-    //image.setStrokeWidth(0);
+    image.setFill(Color.BLACK);
+    imageContainer.setClip(image);
   }
 
   void refresh(Paint background) {
     outer.setFill(background);
     inner.setFill(background);
   }
-  void refresh(Paint background, Image image, double x, double y, double w, double h) {
+
+  void refresh(Paint background, Image image, Card card) {
     outer.setFill(background);
     inner.setFill(background);
     imageContainer.getChildren().clear();
     imageView.setImage(image);
-    imageView.setFitWidth(w);
-    imageView.setFitHeight(h);
-    AnchorPane.setLeftAnchor(imageView, x);
-    AnchorPane.setTopAnchor(imageView, y);
+    imageView.setFitWidth(card.getW());
+    imageView.setFitHeight(card.getH());
+    AnchorPane.setLeftAnchor(imageView, (double) card.getX());
+    AnchorPane.setTopAnchor(imageView, (double) card.getY());
     imageContainer.getChildren().add(imageView);
+
+    iconPane.setBackground(background);
+    iconPane.addIcon(0, 2, "1");
+    iconPane.addIcon(0, 4, "2");
+    iconPane.addIcon(0, 6, "3");
+    iconPane.addIcon(0, 8, "4");
   }
 
   private void drawWith(int row, int col, int[] points) {
@@ -106,92 +115,14 @@ public class CardContentFrame extends DirectPane implements Hexagonal, WithEffec
     int size = drawings.length - 1;
     for (int i = 0; i < size; i++) {
       innerDrawings[i] = new LineTo(
-          translateX(drawings[i].getX(), points[i]),
-          translateY(drawings[i].getY(), points[i]));
+          translateX(drawings[i].getX(), points[i], frameScale),
+          translateY(drawings[i].getY(), points[i], frameScale));
     }
     innerDrawings[size] = new LineTo(
-        translateXBordered(drawings[size].getX(), points[size]),
-        translateYBordered(drawings[size].getY(), points[size]));
+        translateXBordered(drawings[size].getX(), points[size], frameScale),
+        translateYBordered(drawings[size].getY(), points[size], frameScale));
     oE.addAll(drawings);
     iE.addAll(innerDrawings);
     imE.addAll(innerDrawings);
-  }
-
-  private double translateX(double x, int position) {
-    switch (position) {
-      case 0:
-        return x;
-      case 1:
-      case 2:
-        return x - frameScale;
-      case 3:
-        return x;
-      case 4:
-      case 5:
-        return x + frameScale;
-      default:
-        return x;
-    }
-  }
-
-  private double translateY(double y, int position) {
-    switch (position) {
-      case 0:
-        return y - frameScale;
-      case 1:
-        return y - frameScale / 2;
-      case 2:
-        return y + frameScale / 2;
-      case 3:
-        return y + frameScale;
-      case 4:
-        return y + frameScale / 2;
-      case 5:
-        return y - frameScale / 2;
-      default:
-        return y;
-    }
-  }
-
-  private double translateXBordered(double x, int position) {
-    switch (position) {
-      case 0:
-      case 1:
-        return x - frameScale;
-      case 2:
-        return x;
-      case 3:
-      case 4:
-        return x + frameScale;
-      default:
-        return x;
-    }
-  }
-
-  private double translateYBordered(double y, int position) {
-    switch (position) {
-      case 0:
-        return y - frameScale / 2;
-      case 1:
-        return y + frameScale / 2;
-      case 2:
-        return y + frameScale;
-      case 3:
-        return y + frameScale / 2;
-      case 4:
-        return y - frameScale / 2;
-      case 5:
-        return y - frameScale;
-      default:
-        return y;
-    }
-  }
-
-  private int getRow(int num, int r) {
-    return (int) (10 + (r * 1.5) * num);
-  }
-
-  private int getCol(int num, int r) {
-    return num * (r - (r / 10 + 1));
   }
 }

@@ -45,10 +45,7 @@ public class CardView extends DirectPane implements WithEffects, WithText, Initi
     headerView.refresh(card.getName(), backgroundPaint);
     if (card.getImagePath() != null) {
       Image contentImage = new Image(cardService.getImageUrl(card));
-      ImagePattern content = new ImagePattern(contentImage, card.getX(), card.getY(),
-          card.getW(), card.getH(), false);
-        contentFrame.refresh(backgroundPaint, contentImage, card.getX(), card.getY(), card.getW(),
-            card.getH());
+      contentFrame.refresh(backgroundPaint, contentImage, card);
     } else {
       contentFrame.refresh(backgroundPaint);
     }
