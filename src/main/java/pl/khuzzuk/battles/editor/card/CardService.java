@@ -30,15 +30,39 @@ public class CardService {
     card.setH((int) image.getHeight());
   }
 
-  private static void define() {
-    int movement;
-    int weaponSkills;
-    int ballisticSkills;
-    int strength;
-    int toughness;
-    int wounds;
-    int initiative;
-    int attacks;
-    int leadership;
+  public int getMovement(Card card) {
+    return 4;
+  }
+
+  public int getWeaponSkills(Card card) {
+    return 3 + card.getExperience();
+  }
+
+  public int getBallisticSkills(Card card) {
+    return 3 + card.getExperience();
+  }
+
+  public int getStrength(Card card) {
+    return 3;
+  }
+
+  public int getToughness(Card card) {
+    return 3;
+  }
+
+  public int getWounds(Card card) {
+    return 1;
+  }
+
+  public int getInitiative(Card card) {
+    return 3;
+  }
+
+  public int getAttacks(Card card) {
+    return 1;
+  }
+
+  public int getLeadership(Card card) {
+    return 7 + card.getExperience();
   }
 }

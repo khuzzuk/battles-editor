@@ -26,10 +26,12 @@ public class CardView extends DirectPane implements WithEffects, WithText, Initi
 
   private Rectangle backElement = new Rectangle(731, 1181);
   private HeaderView headerView = new HeaderView(671, 75);
-  private CardContentFrame contentFrame = new CardContentFrame(64);
+  private CardContentFrame contentFrame;
 
   @Override
   public void afterPropertiesSet() {
+    contentFrame = new CardContentFrame(64, cardService);
+
     place(backElement, 0, 0);
     place(headerView, 30, 30);
     place(contentFrame, 24, 120);

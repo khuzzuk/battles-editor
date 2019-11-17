@@ -13,9 +13,15 @@ public class Icon extends DirectPane implements Hexagonal, WithEffects, WithText
   private double iconR;
   private double frameScale;
 
-  public void draw(String content) {
+  void draw(String content) {
     drawBase();
     addText(content);
+  }
+
+  void addBlend(Paint paint) {
+    Path blend = getHex(0, 0, iconR);
+    blend.setFill(paint);
+    place(blend, 0, 0);
   }
 
   private void drawBase() {

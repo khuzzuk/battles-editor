@@ -12,6 +12,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 import pl.khuzzuk.battles.editor.card.Card;
+import pl.khuzzuk.battles.editor.card.CardService;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.HexPlane;
 import pl.khuzzuk.battles.editor.ui.Hexagonal;
@@ -21,6 +22,7 @@ import pl.khuzzuk.battles.editor.ui.WithEffects;
 public class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEffects {
 
   private final int hexR;
+  private final CardService cardService;
   private double frameScale;
 
   private Path outer = new Path();
@@ -34,8 +36,9 @@ public class CardContentFrame extends DirectPane implements Hexagonal, HexPlane,
   private ImageView imageView = new ImageView();
   private IconPane iconPane;
 
-  CardContentFrame(int hexR) {
+  CardContentFrame(int hexR, CardService cardService) {
     this.hexR = hexR;
+    this.cardService = cardService;
     frameScale = hexR / 8d;
     iconPane = new IconPane(hexR);
 
@@ -103,10 +106,15 @@ public class CardContentFrame extends DirectPane implements Hexagonal, HexPlane,
     imageContainer.getChildren().add(imageView);
 
     iconPane.setBackground(background);
-    iconPane.addIcon(0, 2, "1");
-    iconPane.addIcon(0, 4, "2");
-    iconPane.addIcon(0, 6, "3");
-    iconPane.addIcon(0, 8, "4");
+    iconPane.clear();
+    System.out.println("add icons");
+    iconPane.addIcon(0, 2, "" + cardService.getMovement(card));
+    iconPane.addIcon(0, 4, "" + cardService.getWeaponSkills(card));
+    iconPane.addIcon(0, 6, "" + cardService.getBallisticSkills(card));
+    iconPane.addIcon(0, 8, "" + cardService.getInitiative(card));
+    iconPane.addIcon(1, 1, "" + cardService.getStrength(card));
+    iconPane.addIcon(1, 3, "" + cardService.getToughness(card));
+    iconPane.addIcon(1, 5, "" + cardService.getLeadership(card));
   }
 
   private void drawWith(int row, int col, int[] points) {

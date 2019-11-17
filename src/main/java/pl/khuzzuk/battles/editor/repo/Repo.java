@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @Repository
 public class Repo implements InitializingBean {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     private final SettingsRepo settingsRepo;
 
@@ -67,7 +67,7 @@ public class Repo implements InitializingBean {
 
     private void loadNation(Path file, Path directory) {
         try (BufferedReader reader = Files.newBufferedReader(directory.resolve(file))) {
-            Nation nation = OBJECT_MAPPER.readValue(reader, Nation.class);
+            Nation nation = objectMapper.readValue(reader, Nation.class);
             nations.add(nation);
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class Repo implements InitializingBean {
 
     private void loadCard(Path file, Path directory) {
         try (BufferedReader reader = Files.newBufferedReader(directory.resolve(file))) {
-            Card card = OBJECT_MAPPER.readValue(reader, Card.class);
+            Card card = objectMapper.readValue(reader, Card.class);
             cards.add(card);
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,7 +101,7 @@ public class Repo implements InitializingBean {
         nations.add(nation);
         Path nationPath = directory.resolve(Path.of(nation.getName() + ".json"));
         try (OutputStream output = Files.newOutputStream(nationPath)){
-            OBJECT_MAPPER.writeValue(output, nation);
+            objectMapper.writeValue(output, nation);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,7 +118,7 @@ public class Repo implements InitializingBean {
         Path cardPath = directory
             .resolve(Path.of(card.getNationName() + "\\" + card.getName() + ".json"));
         try (OutputStream output = Files.newOutputStream(cardPath)){
-            OBJECT_MAPPER.writeValue(output, card);
+            objectMapper.writeValue(output, card);
         } catch (IOException e) {
             e.printStackTrace();
         }
