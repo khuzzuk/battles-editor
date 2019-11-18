@@ -20,10 +20,10 @@ public class IconPane extends DirectPane implements HexPlane {
         getChildren().clear();
     }
 
-    public void addIcon(int row, int col, String content) {
+    public void addIcon(int row, int col, String content, Color blend) {
         Icon icon = new Icon(hexR, background);
         icon.draw(content);
-        icon.addBlend(Color.color(216 / 255, 158 / 255, 1, 0.25));
+        icon.addBlend(blend);
 
         double x = getCol(col, hexR);
         double topAnchor = (hexR * 3d / 2) * row + frameScale * 3 / 2;

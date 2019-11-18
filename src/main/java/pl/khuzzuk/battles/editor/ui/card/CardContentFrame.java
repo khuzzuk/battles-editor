@@ -1,5 +1,7 @@
 package pl.khuzzuk.battles.editor.ui.card;
 
+import static javafx.scene.paint.Color.color;
+
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,7 +21,11 @@ import pl.khuzzuk.battles.editor.ui.Hexagonal;
 import pl.khuzzuk.battles.editor.ui.IconPane;
 import pl.khuzzuk.battles.editor.ui.WithEffects;
 
-public class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEffects {
+class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEffects {
+
+  private static final Color SKILLS_BLEND = color(0.36, 0.36, 0.36, 0.25);
+  private static final Color MOVEMENT_BLEND = color(0.36, 0.61, 0.39, 0.25);
+  private static final Color PHYSIQUE_BLEND = color(0.37, 0.15, 0.02, 0.25);
 
   private final int hexR;
   private final CardService cardService;
@@ -107,14 +113,19 @@ public class CardContentFrame extends DirectPane implements Hexagonal, HexPlane,
 
     iconPane.setBackground(background);
     iconPane.clear();
-    System.out.println("add icons");
-    iconPane.addIcon(0, 2, "" + cardService.getMovement(card));
-    iconPane.addIcon(0, 4, "" + cardService.getWeaponSkills(card));
-    iconPane.addIcon(0, 6, "" + cardService.getBallisticSkills(card));
-    iconPane.addIcon(0, 8, "" + cardService.getInitiative(card));
-    iconPane.addIcon(1, 1, "" + cardService.getStrength(card));
-    iconPane.addIcon(1, 3, "" + cardService.getToughness(card));
-    iconPane.addIcon(1, 5, "" + cardService.getLeadership(card));
+    iconPane.addIcon(0, 2, "" + cardService.getMovement(card), MOVEMENT_BLEND);
+    iconPane.addIcon(0, 4, "" + cardService.getWeaponSkills(card), SKILLS_BLEND);
+    iconPane.addIcon(0, 6, "" + cardService.getBallisticSkills(card), SKILLS_BLEND);
+    iconPane.addIcon(0, 8, "" + cardService.getInitiative(card), SKILLS_BLEND);
+    iconPane.addIcon(1, 1, "" + cardService.getStrength(card), PHYSIQUE_BLEND);
+    iconPane.addIcon(1, 3, "" + cardService.getToughness(card), PHYSIQUE_BLEND);
+    iconPane.addIcon(1, 9, "" + cardService.getLeadership(card), SKILLS_BLEND);
+    if (cardService.getWounds(card) > 1) {
+      iconPane.addIcon(1, 5, "" + cardService.getWounds(card), PHYSIQUE_BLEND);
+    }
+    if (cardService.getAttacks(card) > 1) {
+      iconPane.addIcon(1, 7, "" + cardService.getAttacks(card), SKILLS_BLEND);
+    }
   }
 
   private void drawWith(int row, int col, int[] points) {
