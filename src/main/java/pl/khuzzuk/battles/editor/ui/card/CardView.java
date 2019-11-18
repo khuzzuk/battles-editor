@@ -14,15 +14,16 @@ import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.HeaderView;
+import pl.khuzzuk.battles.editor.ui.ImageService;
 import pl.khuzzuk.battles.editor.ui.WithEffects;
 import pl.khuzzuk.battles.editor.ui.WithText;
 
 @RequiredArgsConstructor
 @Component
 public class CardView extends DirectPane implements WithEffects, WithText, InitializingBean {
-
   private final NationService nationService;
   private final CardService cardService;
+  private final ImageService imageService;
 
   private Rectangle backElement = new Rectangle(731, 1181);
   private HeaderView headerView = new HeaderView(671, 75);
@@ -30,7 +31,7 @@ public class CardView extends DirectPane implements WithEffects, WithText, Initi
 
   @Override
   public void afterPropertiesSet() {
-    contentFrame = new CardContentFrame(64, cardService);
+    contentFrame = new CardContentFrame(64, cardService, imageService);
 
     place(backElement, 0, 0);
     place(headerView, 30, 30);

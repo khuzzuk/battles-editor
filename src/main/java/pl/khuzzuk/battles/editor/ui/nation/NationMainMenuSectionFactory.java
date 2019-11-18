@@ -24,21 +24,18 @@ public class NationMainMenuSectionFactory {
         Label nationLabel = new Label("Nations");
         mainMenu.place(nationLabel, 10, 50);
 
-        nationSelector.getItems().clear();
-        nationSelector.getItems().addAll(repo.getNations());
+        nationSelector.getItems().setAll(repo.getNations());
         nationSelector.valueProperty().addListener((obs, prev, nation) -> onNationSelection(nation));
         mainMenu.place(nationSelector, 100, 50);
 
         Button createNationButton = new Button("+");
-        createNationButton.setOnAction(event -> nationEditor(nationSelector));
+        createNationButton.setOnAction(event -> nationEditor());
         mainMenu.place(createNationButton, 70, 50);
     }
 
-    private void nationEditor(ComboBox<Nation> nationSelector) {
-        Nation nation = nationSelector.getValue();
-        if (nation == null) {
-            nation = new Nation();
-        }
+    private void nationEditor() {
+        Nation nation =
+            nationSelector.getValue() != null ? nationSelector.getValue() : new Nation();
         nationMenu.refresh(nation, settingsRepo.getCurrentWorkingDirectory());
     }
 

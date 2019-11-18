@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.khuzzuk.battles.editor.card.Card;
+import pl.khuzzuk.battles.editor.equipment.Equipment;
 import pl.khuzzuk.battles.editor.nation.Nation;
 
 @Configuration
@@ -43,6 +44,11 @@ public class UIConfig {
 
   @Bean
   ComboBox<Card> cardSelector() {
+    return new ComboBox<>();
+  }
+
+  @Bean
+  ComboBox<Equipment> equipmentSelector() {
     return new ComboBox<>();
   }
 }

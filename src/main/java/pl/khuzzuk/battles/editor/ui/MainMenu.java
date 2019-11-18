@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.card.CardMainMenuSectionFactory;
+import pl.khuzzuk.battles.editor.ui.equipment.EquipmentMainMenuSectionFactory;
 import pl.khuzzuk.battles.editor.ui.nation.NationMainMenuSectionFactory;
 
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class MainMenu extends DirectPane implements InitializingBean {
     private SettingsRepo settingsRepo;
     private NationMainMenuSectionFactory nationMainMenuSectionFactory;
     private CardMainMenuSectionFactory cardMainMenuSectionFactory;
+    private EquipmentMainMenuSectionFactory equipmentMainMenuSectionFactory;
 
     @Override
     public void afterPropertiesSet() {
@@ -32,6 +34,7 @@ public class MainMenu extends DirectPane implements InitializingBean {
         if (settingsRepo.hasCurrentWorkingDirectory()) {
             nationMainMenuSectionFactory.createSection(this);
             cardMainMenuSectionFactory.createSection(this);
+            equipmentMainMenuSectionFactory.createSection(this);
         } else {
             Button selectDirectory = new Button("Choose directory");
             selectDirectory.setOnAction(event -> selectDirectory());

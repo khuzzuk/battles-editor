@@ -1,6 +1,17 @@
 package pl.khuzzuk.battles.editor.repo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
@@ -10,20 +21,11 @@ import pl.khuzzuk.battles.editor.equipment.Equipment;
 import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @AllArgsConstructor
 @Repository
 public class Repo implements InitializingBean {
+
+    private static final String EQUIPMENT_FILE = "Equipment/equipment.json";
     private final ObjectMapper objectMapper;
 
     private final SettingsRepo settingsRepo;
@@ -49,6 +51,7 @@ public class Repo implements InitializingBean {
 
         loadNations(directory);
         loadCards(directory);
+        loadEquipment(directory);
     }
 
     public Nation getNationByName(String name) {
@@ -119,6 +122,31 @@ public class Repo implements InitializingBean {
             .resolve(Path.of(card.getNationName() + "\\" + card.getName() + ".json"));
         try (OutputStream output = Files.newOutputStream(cardPath)){
             objectMapper.writeValue(output, card);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadEquipment(Path directory) {
+        try {
+            Path equipmentPath = directory.resolve(Paths.get(EQUIPMENT_FILE));
+            if (Files.exists(equipmentPath)) {
+                try (BufferedReader reader = Files.newBufferedReader(equipmentPath)) {
+                    Equipment[] equipmentToAdd = objectMapper.readValue(reader, Equipment[].class);
+                    equipment.addAll(Arrays.asList(equipmentToAdd));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveEquipment(Equipment equipment) {
+        this.equipment.add(equipment);
+        Path equipmentPath = settingsRepo.getFileFromCurrentDirectory(EQUIPMENT_FILE);
+
+        try (OutputStream output = Files.newOutputStream(equipmentPath)) {
+            objectMapper.writeValue(output, this.equipment);
         } catch (IOException e) {
             e.printStackTrace();
         }

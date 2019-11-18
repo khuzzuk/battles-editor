@@ -10,8 +10,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Shape;
 
 public interface WithEffects {
-    default void setBackground(Image background, Shape element) {
-        element.setFill(new ImagePattern(background, 0, 0, 1, 1, true));
+    default void setImage(Image image, Shape element, int x, int y, int w, int h) {
+        element.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
         element.setStrokeWidth(0);
     }
 

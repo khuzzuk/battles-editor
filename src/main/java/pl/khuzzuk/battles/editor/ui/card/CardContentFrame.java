@@ -19,6 +19,7 @@ import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.HexPlane;
 import pl.khuzzuk.battles.editor.ui.Hexagonal;
 import pl.khuzzuk.battles.editor.ui.IconPane;
+import pl.khuzzuk.battles.editor.ui.ImageService;
 import pl.khuzzuk.battles.editor.ui.WithEffects;
 
 class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEffects {
@@ -29,6 +30,7 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
 
   private final int hexR;
   private final CardService cardService;
+  private final ImageService imageService;
   private double frameScale;
 
   private Path outer = new Path();
@@ -42,11 +44,12 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
   private ImageView imageView = new ImageView();
   private IconPane iconPane;
 
-  CardContentFrame(int hexR, CardService cardService) {
+  CardContentFrame(int hexR, CardService cardService, ImageService imageService) {
     this.hexR = hexR;
     this.cardService = cardService;
+    this.imageService = imageService;
     frameScale = hexR / 8d;
-    iconPane = new IconPane(hexR);
+    iconPane = new IconPane(hexR, imageService);
 
     MoveTo startingPoint = getStartingPoint(getCol(4, hexR), getRow(1, hexR), hexR, 5);
     MoveTo innerStartingPoint = new MoveTo(translateX(startingPoint.getX(), 5, frameScale),

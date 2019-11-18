@@ -1,21 +1,32 @@
 package pl.khuzzuk.battles.editor.ui;
 
 import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Path;
 import lombok.RequiredArgsConstructor;
+import pl.khuzzuk.battles.editor.equipment.Equipment;
 
 @RequiredArgsConstructor
 public class Icon extends DirectPane implements Hexagonal, WithEffects, WithText {
   private final int planeR;
   private final Paint background;
+  private final ImageService imageService;
   private double iconR;
   private double frameScale;
+  private AnchorPane imageContainer = new AnchorPane();
+  private ImageView imageView = new ImageView();
 
   void draw(String content) {
     drawBase();
     addText(content);
+  }
+
+  void draw(Equipment equipment) {
+    drawBase();
+    addIcon(equipment);
   }
 
   void addBlend(Paint paint) {
@@ -41,6 +52,7 @@ public class Icon extends DirectPane implements Hexagonal, WithEffects, WithText
     innerIcon.setFill(background);
     addInnerShadow(innerIcon);
     place(innerIcon, innerBorderSize, innerBorderSize * 1.33);
+    place(imageContainer, 0, 0);
   }
 
   private void addText(String content) {
@@ -50,5 +62,15 @@ public class Icon extends DirectPane implements Hexagonal, WithEffects, WithText
     textBox.setAlignment(Pos.TOP_CENTER);
     placeText(textBox, content);
     place(textBox, 0, -planeR * 0.4);
+  }
+
+  private void addIcon(Equipment equipment) {
+    imageContainer.getChildren().clear();
+    imageView.setImage(imageService.getImage(equipment.getIconFile()));
+    imageView.setFitWidth(equipment.getW());
+    imageView.setFitHeight(equipment.getH());
+    AnchorPane.setLeftAnchor(imageView, (double) equipment.getX());
+    AnchorPane.setTopAnchor(imageView, (double) equipment.getY());
+    imageContainer.getChildren().add(imageView);
   }
 }
