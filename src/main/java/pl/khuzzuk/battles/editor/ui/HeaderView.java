@@ -19,7 +19,7 @@ public class HeaderView extends DirectPane implements WithEffects, WithText {
     place(textArea, 5, -10);
     addDropShadow(outer);
     addInnerShadow(inner);
-    textArea.setAlignment(Pos.TOP_CENTER);
+    textArea.setAlignment(Pos.CENTER);
     textArea.setPrefWidth(x - 10);
     textArea.setPrefHeight(y - 10);
   }

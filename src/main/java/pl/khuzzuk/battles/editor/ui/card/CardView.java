@@ -10,6 +10,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.card.Card;
 import pl.khuzzuk.battles.editor.card.CardService;
+import pl.khuzzuk.battles.editor.equipment.EquipmentService;
 import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.nation.NationService;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
@@ -23,6 +24,7 @@ import pl.khuzzuk.battles.editor.ui.WithText;
 public class CardView extends DirectPane implements WithEffects, WithText, InitializingBean {
   private final NationService nationService;
   private final CardService cardService;
+  private final EquipmentService equipmentService;
   private final ImageService imageService;
 
   private Rectangle backElement = new Rectangle(731, 1181);
@@ -31,7 +33,7 @@ public class CardView extends DirectPane implements WithEffects, WithText, Initi
 
   @Override
   public void afterPropertiesSet() {
-    contentFrame = new CardContentFrame(64, cardService, imageService);
+    contentFrame = new CardContentFrame(64, cardService, imageService, equipmentService);
 
     place(backElement, 0, 0);
     place(headerView, 30, 30);

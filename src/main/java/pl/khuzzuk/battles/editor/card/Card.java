@@ -1,22 +1,25 @@
 package pl.khuzzuk.battles.editor.card;
 
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Data;
-
-import java.util.List;
-import pl.khuzzuk.battles.editor.equipment.Equipment;
 
 @Data
 public class Card {
 
   private String name;
   private int experience;
-  private List<Equipment> equipment;
+  private Set<String> equipment = new HashSet<>();
   private String nationName;
   private String imagePath;
   private int x;
   private int y;
   private int w;
   private int h;
+
+  public void setEquipment(Set<String> equipment) {
+    this.equipment = equipment != null ? equipment : new HashSet<>();
+  }
 
   @Override
   public String toString() {

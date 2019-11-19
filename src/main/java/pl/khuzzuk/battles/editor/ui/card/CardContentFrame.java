@@ -2,6 +2,8 @@ package pl.khuzzuk.battles.editor.ui.card;
 
 import static javafx.scene.paint.Color.color;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,8 +15,11 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
+import org.apache.commons.lang3.tuple.Pair;
 import pl.khuzzuk.battles.editor.card.Card;
 import pl.khuzzuk.battles.editor.card.CardService;
+import pl.khuzzuk.battles.editor.equipment.Equipment;
+import pl.khuzzuk.battles.editor.equipment.EquipmentService;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
 import pl.khuzzuk.battles.editor.ui.HexPlane;
 import pl.khuzzuk.battles.editor.ui.Hexagonal;
@@ -24,6 +29,10 @@ import pl.khuzzuk.battles.editor.ui.WithEffects;
 
 class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEffects {
 
+  private static final List<Pair<Integer, Integer>> ICON_PLACEMENTS = List
+      .of(Pair.of(2, 0), Pair.of(3, 1), Pair.of(4, 0), Pair.of(5, 1), Pair.of(6, 0),
+          Pair.of(7, 1), Pair.of(7, 3), Pair.of(3, 9), Pair.of(4, 10),
+          Pair.of(5, 9), Pair.of(6, 10), Pair.of(7, 9), Pair.of(7, 5), Pair.of(7, 7));
   private static final Color SKILLS_BLEND = color(0.36, 0.36, 0.36, 0.25);
   private static final Color MOVEMENT_BLEND = color(0.36, 0.61, 0.39, 0.25);
   private static final Color PHYSIQUE_BLEND = color(0.37, 0.15, 0.02, 0.25);
@@ -31,6 +40,7 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
   private final int hexR;
   private final CardService cardService;
   private final ImageService imageService;
+  private final EquipmentService equipmentService;
   private double frameScale;
 
   private Path outer = new Path();
@@ -44,10 +54,12 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
   private ImageView imageView = new ImageView();
   private IconPane iconPane;
 
-  CardContentFrame(int hexR, CardService cardService, ImageService imageService) {
+  CardContentFrame(int hexR, CardService cardService, ImageService imageService,
+      EquipmentService equipmentService) {
     this.hexR = hexR;
     this.cardService = cardService;
     this.imageService = imageService;
+    this.equipmentService = equipmentService;
     frameScale = hexR / 8d;
     iconPane = new IconPane(hexR, imageService);
 
@@ -126,9 +138,13 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
     if (cardService.getWounds(card) > 1) {
       iconPane.addIcon(1, 5, "" + cardService.getWounds(card), PHYSIQUE_BLEND);
     }
-    if (cardService.getAttacks(card) > 1) {
-      iconPane.addIcon(1, 7, "" + cardService.getAttacks(card), SKILLS_BLEND);
+    if (cardService.getArmor(card) > 0) {
+      iconPane.addIcon(1, 7, "" + cardService.getArmor(card), PHYSIQUE_BLEND);
     }
+    if (cardService.getAttacks(card) > 1) {
+      iconPane.addIcon(2, 10, "" + cardService.getAttacks(card), SKILLS_BLEND);
+    }
+    drawEquipmentIcons(card);
   }
 
   private void drawWith(int row, int col, int[] points) {
@@ -146,5 +162,13 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
     oE.addAll(drawings);
     iE.addAll(innerDrawings);
     imE.addAll(innerDrawings);
+  }
+
+  private void drawEquipmentIcons(Card card) {
+    List<Equipment> equipmentList = new ArrayList<>(equipmentService.findEquipment(card));
+    for (int i = 0; i < equipmentList.size() && i < ICON_PLACEMENTS.size(); i++) {
+      Pair<Integer, Integer> position = ICON_PLACEMENTS.get(i);
+      iconPane.addIcon(position.getLeft(), position.getRight(), equipmentList.get(i));
+    }
   }
 }

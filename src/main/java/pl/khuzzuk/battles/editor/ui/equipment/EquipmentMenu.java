@@ -28,6 +28,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
   private final SettingsRepo settingsRepo;
   private final Repo repo;
   private final ComboBox<Nation> nationSelector;
+  private final ComboBox<Equipment> equipmentSelector;
 
   private TextField nameField = new TextField();
   private Button iconFile = new Button();
@@ -162,6 +163,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
     equipment.setH(Integer.parseInt(hField.getText()));
 
     repo.saveEquipment(equipment);
+    equipmentSelector.getItems().setAll(repo.getEquipment());
     toMainMenu();
   }
 

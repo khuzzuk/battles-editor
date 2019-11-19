@@ -59,7 +59,7 @@ public class Icon extends DirectPane implements Hexagonal, WithEffects, WithText
     HBox textBox = new HBox();
     textBox.setPrefWidth(planeR * 1.5);
     textBox.setPrefHeight(planeR * 1.5);
-    textBox.setAlignment(Pos.TOP_CENTER);
+    textBox.setAlignment(Pos.CENTER);
     placeText(textBox, content);
     place(textBox, 0, -planeR * 0.4);
   }

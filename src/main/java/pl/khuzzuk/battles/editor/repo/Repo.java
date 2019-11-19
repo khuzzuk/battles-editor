@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -150,5 +151,9 @@ public class Repo implements InitializingBean {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Optional<Equipment> findEquipmentByName(String name) {
+        return equipment.stream().filter(eq -> eq.getName().equals(name)).findAny();
     }
 }

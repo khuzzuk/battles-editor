@@ -1,10 +1,16 @@
 package pl.khuzzuk.battles.editor.ui.card;
 
 import java.io.File;
+import java.util.stream.Collectors;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +18,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.card.Card;
 import pl.khuzzuk.battles.editor.card.CardService;
+import pl.khuzzuk.battles.editor.equipment.Equipment;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
@@ -35,6 +42,8 @@ public class CardMenu extends DirectPane implements InitializingBean {
   private TextField wField = new TextField();
   private TextField hField = new TextField();
 
+  private TableView<Equipment> equipmentForCard = new TableView<>();
+
   private Card card;
 
   @Override
@@ -53,8 +62,21 @@ public class CardMenu extends DirectPane implements InitializingBean {
     place(wField, 40, 250);
     place(new Label("h"), 15, 290);
     place(hField, 40, 290);
+    place(equipmentForCard, 10, 330);
     place(save, 10, 600);
     place(cardView, 300, 10);
+
+    equipmentForCard.setPrefHeight(250);
+    equipmentForCard.setPrefWidth(250);
+    equipmentForCard.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    equipmentForCard.getSelectionModel().getSelectedItems()
+        .addListener((ListChangeListener<Equipment>) c -> {
+          mergeEquipment(c);
+          refresh();
+        });
+    TableColumn<Equipment, String> nameColumn = new TableColumn<>("Equipment");
+    nameColumn.setCellValueFactory(eq -> new SimpleStringProperty(eq.getValue().getName()));
+    equipmentForCard.getColumns().add(nameColumn);
 
     back.setOnAction(action -> toMainMenu());
     save.setOnAction(event -> saveCard());
@@ -71,8 +93,19 @@ public class CardMenu extends DirectPane implements InitializingBean {
   }
 
   void refresh(Card card) {
-    super.refresh();
+    this.card = null;
+    equipmentForCard.getSelectionModel().clearSelection();
     this.card = card;
+    equipmentForCard.getItems().setAll(repo.getEquipment());
+    refresh();
+  }
+
+  @Override
+  public void refresh() {
+    super.refresh();
+    equipmentForCard.getItems().stream()
+        .filter(equipment -> card.getEquipment().contains(equipment.getName()))
+        .forEach(equipment -> equipmentForCard.getSelectionModel().select(equipment));
 
     nameField.setText(card.getName());
     experienceField.setText(card.getExperience() + "");
@@ -129,9 +162,28 @@ public class CardMenu extends DirectPane implements InitializingBean {
   private void saveCard() {
     card.setName(nameField.getText());
     card.setExperience(Integer.parseInt(experienceField.getText()));
+    card.setEquipment(
+        equipmentForCard.getSelectionModel().getSelectedItems().stream().map(Equipment::getName)
+            .collect(
+                Collectors.toSet()));
 
     repo.saveCard(card, settingsRepo.getCurrentWorkingDirectory());
     moveImage();
     toMainMenu();
+  }
+
+  private void mergeEquipment(ListChangeListener.Change<? extends Equipment> change) {
+    if (card == null) {
+      return;
+    }
+
+    while (change.next()) {
+      for (Equipment equipment : change.getRemoved()) {
+        card.getEquipment().remove(equipment.getName());
+      }
+      for (Equipment equipment : change.getAddedSubList()) {
+        card.getEquipment().add(equipment.getName());
+      }
+    }
   }
 }
