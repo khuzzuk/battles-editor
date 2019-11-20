@@ -34,9 +34,9 @@ public class IconPane extends DirectPane implements HexPlane {
         place(icon, leftAnchor, topAnchor);
     }
 
-    public void addIcon(int row, int col, Equipment equipment) {
+    public void addIcon(int row, int col, Equipment equipment, int scale) {
         Icon icon = new Icon(hexR, background, imageService);
-        icon.draw(equipment);
+        icon.draw(equipment, scale);
 
         double x = getCol(col, hexR);
         double topAnchor = (hexR * 3d / 2) * row + frameScale * 3 / 2;

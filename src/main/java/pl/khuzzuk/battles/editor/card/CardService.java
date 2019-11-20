@@ -1,12 +1,10 @@
 package pl.khuzzuk.battles.editor.card;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.khuzzuk.battles.editor.equipment.EquipmentService;
-import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.util.UrlUtils;
 
@@ -14,12 +12,7 @@ import pl.khuzzuk.battles.editor.util.UrlUtils;
 @Service
 public class CardService {
   private SettingsRepo settingsRepo;
-  private Repo repo;
   private EquipmentService equipmentService;
-
-  public Path getCardPath(Card card) {
-    return Paths.get(card.getNationName(), card.getName());
-  }
 
   public String getImageUrl(Card card) {
     return UrlUtils.resolveUrl(settingsRepo.getCurrentWorkingDirectory(), card.getImagePath());

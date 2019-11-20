@@ -6,7 +6,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.card.Card;
 import pl.khuzzuk.battles.editor.card.CardService;
@@ -21,26 +22,29 @@ import pl.khuzzuk.battles.editor.ui.WithText;
 
 @RequiredArgsConstructor
 @Component
-public class CardView extends DirectPane implements WithEffects, WithText, InitializingBean {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class CardView extends DirectPane implements WithEffects, WithText {
   private final NationService nationService;
   private final CardService cardService;
   private final EquipmentService equipmentService;
   private final ImageService imageService;
 
-  private Rectangle backElement = new Rectangle(731, 1181);
-  private HeaderView headerView = new HeaderView(671, 75);
+  private Rectangle backElement;
+  private HeaderView headerView;
   private CardContentFrame contentFrame;
 
-  @Override
-  public void afterPropertiesSet() {
-    contentFrame = new CardContentFrame(64, cardService, imageService, equipmentService);
+  public void rescale(double scale) {
+    contentFrame = new CardContentFrame((int) scale, (int) (64 * scale), cardService, imageService,
+        equipmentService);
+    backElement = new Rectangle(730 * scale, 960 * scale);
+    headerView = new HeaderView((int) (670 * scale), (int) (75 * scale));
 
     place(backElement, 0, 0);
-    place(headerView, 30, 30);
-    place(contentFrame, 24, 120);
+    place(headerView, 30 * scale, 30 * scale);
+    place(contentFrame, 24 * scale, 120 * scale);
   }
 
-  void refresh(Card card, Nation nation) {
+  public void refresh(Card card, Nation nation) {
     Paint backgroundPaint = Color.BLACK;
     if (nation.getBackgroundImagePath() != null) {
       Image backgroundImage = new Image(nationService.getBackgroundUrl(nation));

@@ -24,9 +24,9 @@ public class Icon extends DirectPane implements Hexagonal, WithEffects, WithText
     addText(content);
   }
 
-  void draw(Equipment equipment) {
+  void draw(Equipment equipment, int scale) {
     drawBase();
-    addIcon(equipment);
+    addIcon(equipment, scale);
   }
 
   void addBlend(Paint paint) {
@@ -64,13 +64,13 @@ public class Icon extends DirectPane implements Hexagonal, WithEffects, WithText
     place(textBox, 0, -planeR * 0.4);
   }
 
-  private void addIcon(Equipment equipment) {
+  private void addIcon(Equipment equipment, double scale) {
     imageContainer.getChildren().clear();
     imageView.setImage(imageService.getImage(equipment.getIconFile()));
-    imageView.setFitWidth(equipment.getW());
-    imageView.setFitHeight(equipment.getH());
-    AnchorPane.setLeftAnchor(imageView, (double) equipment.getX());
-    AnchorPane.setTopAnchor(imageView, (double) equipment.getY());
+    imageView.setFitWidth(equipment.getW() * scale);
+    imageView.setFitHeight(equipment.getH() * scale);
+    AnchorPane.setLeftAnchor(imageView, (double) equipment.getX() * scale);
+    AnchorPane.setTopAnchor(imageView, (double) equipment.getY() * scale);
     imageContainer.getChildren().add(imageView);
   }
 }

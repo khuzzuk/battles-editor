@@ -38,6 +38,7 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
   private static final Color PHYSIQUE_BLEND = color(0.37, 0.15, 0.02, 0.25);
 
   private final int hexR;
+  private final int scale;
   private final CardService cardService;
   private final ImageService imageService;
   private final EquipmentService equipmentService;
@@ -54,8 +55,9 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
   private ImageView imageView = new ImageView();
   private IconPane iconPane;
 
-  CardContentFrame(int hexR, CardService cardService, ImageService imageService,
+  CardContentFrame(int scale, int hexR, CardService cardService, ImageService imageService,
       EquipmentService equipmentService) {
+    this.scale = scale;
     this.hexR = hexR;
     this.cardService = cardService;
     this.imageService = imageService;
@@ -120,10 +122,10 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
     inner.setFill(background);
     imageContainer.getChildren().clear();
     imageView.setImage(image);
-    imageView.setFitWidth(card.getW());
-    imageView.setFitHeight(card.getH());
-    AnchorPane.setLeftAnchor(imageView, (double) card.getX());
-    AnchorPane.setTopAnchor(imageView, (double) card.getY());
+    imageView.setFitWidth(card.getW() * scale);
+    imageView.setFitHeight(card.getH() * scale);
+    AnchorPane.setLeftAnchor(imageView, (double) card.getX() * scale);
+    AnchorPane.setTopAnchor(imageView, (double) card.getY() * scale);
     imageContainer.getChildren().add(imageView);
 
     iconPane.setBackground(background);
@@ -168,7 +170,7 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
     List<Equipment> equipmentList = new ArrayList<>(equipmentService.findEquipment(card));
     for (int i = 0; i < equipmentList.size() && i < ICON_PLACEMENTS.size(); i++) {
       Pair<Integer, Integer> position = ICON_PLACEMENTS.get(i);
-      iconPane.addIcon(position.getLeft(), position.getRight(), equipmentList.get(i));
+      iconPane.addIcon(position.getLeft(), position.getRight(), equipmentList.get(i), scale);
     }
   }
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.card.Card;
 import pl.khuzzuk.battles.editor.card.CardService;
 import pl.khuzzuk.battles.editor.equipment.Equipment;
+import pl.khuzzuk.battles.editor.print.ImagePrinter;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
@@ -31,9 +32,12 @@ public class CardMenu extends DirectPane implements InitializingBean {
   private final Repo repo;
   private final SettingsRepo settingsRepo;
   private final CardService cardService;
+  private final ImagePrinter imagePrinter;
 
   private Button back = new Button("Back");
   private Button save = new Button("Save");
+  private Button apply = new Button("Apply");
+  private Button toFile = new Button("To file");
   private TextField nameField = new TextField();
   private TextField experienceField = new TextField();
   private Button imageSelector = new Button();
@@ -48,6 +52,7 @@ public class CardMenu extends DirectPane implements InitializingBean {
 
   @Override
   public void afterPropertiesSet() {
+    cardView.rescale(1);
     place(back, 10, 10);
     place(new Label("Name"), 10, 50);
     place(nameField, 50, 50);
@@ -64,22 +69,22 @@ public class CardMenu extends DirectPane implements InitializingBean {
     place(hField, 40, 290);
     place(equipmentForCard, 10, 330);
     place(save, 10, 600);
+    place(apply, 50, 600);
+    place(toFile, 10, 640);
     place(cardView, 300, 10);
 
     equipmentForCard.setPrefHeight(250);
     equipmentForCard.setPrefWidth(250);
     equipmentForCard.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-    equipmentForCard.getSelectionModel().getSelectedItems()
-        .addListener((ListChangeListener<Equipment>) c -> {
-          mergeEquipment(c);
-          refresh();
-        });
+    equipmentForCard.getSelectionModel().getSelectedItems().addListener(this::mergeEquipment);
     TableColumn<Equipment, String> nameColumn = new TableColumn<>("Equipment");
     nameColumn.setCellValueFactory(eq -> new SimpleStringProperty(eq.getValue().getName()));
     equipmentForCard.getColumns().add(nameColumn);
 
     back.setOnAction(action -> toMainMenu());
     save.setOnAction(event -> saveCard());
+    apply.setOnAction(event -> refresh());
+    toFile.setOnAction(event -> imagePrinter.saveToPng(card));
     imageSelector.setOnAction(event -> chooseImage());
 
     final EventHandler<ActionEvent> imageHandler = event -> {

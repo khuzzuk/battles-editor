@@ -140,7 +140,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
           .setBackground(imageService.getPaint(nationSelector.getValue().getBackgroundImagePath()));
     }
     if (iconFilePath != null) {
-      iconPane.addIcon(1, 1, equipment);
+      iconPane.addIcon(1, 1, equipment, 1);
     }
   }
 
