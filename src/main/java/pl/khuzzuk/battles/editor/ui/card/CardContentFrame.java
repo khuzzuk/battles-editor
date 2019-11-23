@@ -21,13 +21,13 @@ import pl.khuzzuk.battles.editor.card.CardService;
 import pl.khuzzuk.battles.editor.equipment.Equipment;
 import pl.khuzzuk.battles.editor.equipment.EquipmentService;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
-import pl.khuzzuk.battles.editor.ui.HexPlane;
+import pl.khuzzuk.battles.editor.ui.HexPane;
 import pl.khuzzuk.battles.editor.ui.Hexagonal;
 import pl.khuzzuk.battles.editor.ui.IconPane;
 import pl.khuzzuk.battles.editor.ui.ImageService;
 import pl.khuzzuk.battles.editor.ui.WithEffects;
 
-class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEffects {
+class CardContentFrame extends DirectPane implements Hexagonal, HexPane, WithEffects {
 
   private static final List<Pair<Integer, Integer>> ICON_PLACEMENTS = List
       .of(Pair.of(2, 0), Pair.of(3, 1), Pair.of(4, 0), Pair.of(5, 1), Pair.of(6, 0),
@@ -101,7 +101,7 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPlane, WithEf
 
     place(outer, 0, 0);
     place(inner, frameScale, frameScale);
-    place(imageContainer, -frameScale * 7 - 1, -frameScale * 5);
+    place(imageContainer, -frameScale * 7 - 2, -frameScale * 5 - 1);
     place(iconPane, 0, 0);
 
     addDropShadow(outer);

@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class DirectPane extends AnchorPane {
+public class DirectPane extends AnchorPane {
     @Autowired
     private UIBridge uiBridge;
 

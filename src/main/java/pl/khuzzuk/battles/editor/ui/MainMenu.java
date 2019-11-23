@@ -21,6 +21,7 @@ public class MainMenu extends DirectPane implements InitializingBean {
     private NationMainMenuSectionFactory nationMainMenuSectionFactory;
     private CardMainMenuSectionFactory cardMainMenuSectionFactory;
     private EquipmentMainMenuSectionFactory equipmentMainMenuSectionFactory;
+    private PrintMenuFactory printMenuFactory;
 
     @Override
     public void afterPropertiesSet() {
@@ -35,6 +36,7 @@ public class MainMenu extends DirectPane implements InitializingBean {
             nationMainMenuSectionFactory.createSection(this);
             cardMainMenuSectionFactory.createSection(this);
             equipmentMainMenuSectionFactory.createSection(this);
+            printMenuFactory.addTo(this);
         } else {
             Button selectDirectory = new Button("Choose directory");
             selectDirectory.setOnAction(event -> selectDirectory());

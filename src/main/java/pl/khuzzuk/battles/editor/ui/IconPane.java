@@ -5,7 +5,7 @@ import javafx.scene.paint.Paint;
 import lombok.Setter;
 import pl.khuzzuk.battles.editor.equipment.Equipment;
 
-public class IconPane extends DirectPane implements HexPlane {
+public class IconPane extends DirectPane implements HexPane {
 
     private final int hexR;
     private final ImageService imageService;

@@ -56,8 +56,8 @@ public class SettingsRepo implements InitializingBean {
     storeSettings();
   }
 
-  public Path getFileFromCurrentDirectory(String path) {
-    return hasCurrentWorkingDirectory() ? getCurrentWorkingDirectory().resolve(Paths.get(path))
-        : Paths.get(path);
+  public Path getFileFromCurrentDirectory(String path, String... other) {
+    return hasCurrentWorkingDirectory() ? getCurrentWorkingDirectory().resolve(Paths.get(path, other))
+        : Paths.get(path, other);
   }
 }

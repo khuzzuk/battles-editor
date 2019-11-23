@@ -1,6 +1,6 @@
 package pl.khuzzuk.battles.editor.ui;
 
-public interface HexPlane {
+public interface HexPane {
   default double translateX(double x, int position, double frameScale) {
     switch (position) {
       case 0:

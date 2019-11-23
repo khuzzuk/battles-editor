@@ -11,17 +11,21 @@ public class HeaderView extends DirectPane implements WithEffects, WithText {
   private Rectangle inner;
   private VBox textArea = new VBox(10);
 
-  public HeaderView(int x, int y) {
-    outer = new Rectangle(x, y);
-    inner = new Rectangle(x - 10, y - 10);
+  public HeaderView(int x, int y, double scale) {
+    final double width = x * scale;
+    final double height = y * scale;
+    final double margin = 10 * scale;
+
+    outer = new Rectangle(width, height);
+    inner = new Rectangle(width - margin, height - margin);
     place(outer, 0, 0);
-    place(inner, 5, 5);
-    place(textArea, 5, -10);
+    place(inner, 5 * scale, 5 * scale);
+    place(textArea, 5 * scale, -10 * scale);
     addDropShadow(outer);
     addInnerShadow(inner);
     textArea.setAlignment(Pos.CENTER);
-    textArea.setPrefWidth(x - 10);
-    textArea.setPrefHeight(y - 10);
+    textArea.setPrefWidth(width - margin);
+    textArea.setPrefHeight(height - margin);
   }
 
   public void refresh(String text, Paint paint) {

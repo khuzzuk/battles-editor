@@ -36,6 +36,11 @@ public interface Hexagonal {
     return Math.cos(radians) * r + y;
   }
 
+  default double getHexX(double r, int point) {
+    double rad = Math.toRadians(60.0 * point);
+    return Math.sin(rad) * r;
+  }
+
   default Path getHex(double x, double y, double r) {
     Path icon = new Path(getStartingPoint(x, y, r, 0));
     icon.getElements().addAll(drawLines(x, y, r, new int[]{1, 2, 3, 4, 5}));

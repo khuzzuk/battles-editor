@@ -1,5 +1,11 @@
 package pl.khuzzuk.battles.editor.ui.card;
 
+import static pl.khuzzuk.battles.editor.card.CardConstants.CARD_HEIGHT;
+import static pl.khuzzuk.battles.editor.card.CardConstants.CARD_WIDTH;
+import static pl.khuzzuk.battles.editor.card.CardConstants.HEADER_HEIGHT;
+import static pl.khuzzuk.battles.editor.card.CardConstants.HEADER_MARGIN;
+import static pl.khuzzuk.battles.editor.card.CardConstants.HEADER_WIDTH;
+
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -36,11 +42,11 @@ public class CardView extends DirectPane implements WithEffects, WithText {
   public void rescale(double scale) {
     contentFrame = new CardContentFrame((int) scale, (int) (64 * scale), cardService, imageService,
         equipmentService);
-    backElement = new Rectangle(730 * scale, 960 * scale);
-    headerView = new HeaderView((int) (670 * scale), (int) (75 * scale));
+    backElement = new Rectangle(CARD_WIDTH * scale, CARD_HEIGHT * scale);
+    headerView = new HeaderView(HEADER_WIDTH, HEADER_HEIGHT, scale);
 
     place(backElement, 0, 0);
-    place(headerView, 30 * scale, 30 * scale);
+    place(headerView, HEADER_MARGIN * scale, HEADER_MARGIN * scale);
     place(contentFrame, 24 * scale, 120 * scale);
   }
 

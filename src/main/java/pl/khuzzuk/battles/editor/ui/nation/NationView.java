@@ -19,7 +19,7 @@ import pl.khuzzuk.battles.editor.ui.WithEffects;
 class NationView extends DirectPane implements WithEffects, InitializingBean {
     private final NationService nationService;
 
-    private HeaderView headerView = new HeaderView(260, 70);
+    private HeaderView headerView = new HeaderView(260, 70, 1);
     private Rectangle backElement = new Rectangle(731, 1181);
     private Rectangle emblemBorderElement = new Rectangle(260, 260);
     private Rectangle emblemElement = new Rectangle(250, 250);

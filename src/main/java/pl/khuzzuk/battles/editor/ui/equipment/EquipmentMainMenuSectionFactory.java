@@ -22,16 +22,17 @@ public class EquipmentMainMenuSectionFactory {
     mainMenu.place(equipmentLabel, 10, 90);
 
     equipmentSelector.getItems().setAll(repo.getEquipment());
-    mainMenu.place(equipmentSelector, 100, 90);
+    mainMenu.place(equipmentSelector, 120, 90);
 
-    Button createNationButton = new Button("+");
-    createNationButton.setOnAction(event -> equipmentEditor());
-    mainMenu.place(createNationButton, 70, 90);
-  }
+    Button createEquipmentButton = new Button("+");
+    createEquipmentButton.setOnAction(event -> equipmentMenu.refresh(new Equipment()));
+    mainMenu.place(createEquipmentButton, 70, 90);
 
-  private void equipmentEditor() {
-    Equipment equipment =
-        equipmentSelector.getValue() != null ? equipmentSelector.getValue() : new Equipment();
-    equipmentMenu.refresh(equipment);
+    Button editEquipmentButton = new Button("E");
+    editEquipmentButton.setDisable(true);
+    editEquipmentButton.setOnAction(event -> equipmentMenu.refresh(equipmentSelector.getValue()));
+    equipmentSelector.valueProperty()
+        .addListener((c, o, n) -> editEquipmentButton.setDisable(n == null));
+    mainMenu.place(editEquipmentButton, 90, 90);
   }
 }
