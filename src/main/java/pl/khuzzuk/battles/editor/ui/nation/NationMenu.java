@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.nation.Nation;
+import pl.khuzzuk.battles.editor.print.ImagePrinter;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
 import pl.khuzzuk.battles.editor.ui.DirectPane;
@@ -22,12 +23,14 @@ public class NationMenu extends DirectPane implements InitializingBean {
     private final NationView nationView;
     private final SettingsRepo settingsRepo;
     private final Repo repo;
+    private final ImagePrinter imagePrinter;
 
     private Label nameLabel = new Label("Name");
     private TextField nameField = new TextField();
     private Button backgroundFile = new Button();
     private Button emblemFile = new Button();
     private Button saveButton = new Button("Save");
+    private Button printButton = new Button("To File");
 
     private Nation nation;
     private Path directory;
@@ -41,9 +44,11 @@ public class NationMenu extends DirectPane implements InitializingBean {
         place(backgroundFile, 10, 50);
         place(emblemFile, 10, 100);
         place(saveButton, 10, 200);
+        place(printButton, 10, 240);
         place(nationView, 300, 10);
 
         saveButton.setOnAction(event -> save());
+        printButton.setOnAction(event -> imagePrinter.saveToPng(nation));
     }
 
     void refresh(Nation nation, Path directory) {

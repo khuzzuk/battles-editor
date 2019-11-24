@@ -40,6 +40,8 @@ public class CardView extends DirectPane implements WithEffects, WithText {
   private CardContentFrame contentFrame;
 
   public void rescale(double scale) {
+    setMaxWidth(CARD_WIDTH * scale);
+    setMaxHeight(CARD_HEIGHT * scale);
     contentFrame = new CardContentFrame((int) scale, (int) (64 * scale), cardService, imageService,
         equipmentService);
     backElement = new Rectangle(CARD_WIDTH * scale, CARD_HEIGHT * scale);
