@@ -35,7 +35,9 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPane, WithEff
           Pair.of(5, 9), Pair.of(6, 10), Pair.of(7, 9), Pair.of(7, 5), Pair.of(7, 7));
   private static final Color SKILLS_BLEND = color(0.36, 0.36, 0.36, 0.25);
   private static final Color MOVEMENT_BLEND = color(0.36, 0.61, 0.39, 0.25);
+  private static final Color REACH_BLEND = color(0.75, 0.55, 0.20, 0.25);
   private static final Color PHYSIQUE_BLEND = color(0.37, 0.15, 0.02, 0.25);
+  private static final Color ARMOR_BLEND = color(0, 0, 0, 0.35);
 
   private final int hexR;
   private final int scale;
@@ -141,10 +143,13 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPane, WithEff
       iconPane.addIcon(1, 5, "" + cardService.getWounds(card), PHYSIQUE_BLEND);
     }
     if (cardService.getArmor(card) > 0) {
-      iconPane.addIcon(1, 7, "" + cardService.getArmor(card), PHYSIQUE_BLEND);
+      iconPane.addIcon(1, 7, "" + cardService.getArmor(card), ARMOR_BLEND);
     }
     if (cardService.getAttacks(card) > 1) {
       iconPane.addIcon(2, 10, "" + cardService.getAttacks(card), SKILLS_BLEND);
+    }
+    if (cardService.getReach(card) > 1) {
+      iconPane.addIcon(2, 0, "" + cardService.getReach(card), REACH_BLEND);
     }
     drawEquipmentIcons(card);
   }
@@ -168,8 +173,9 @@ class CardContentFrame extends DirectPane implements Hexagonal, HexPane, WithEff
 
   private void drawEquipmentIcons(Card card) {
     List<Equipment> equipmentList = new ArrayList<>(equipmentService.findEquipment(card));
-    for (int i = 0; i < equipmentList.size() && i < ICON_PLACEMENTS.size(); i++) {
-      Pair<Integer, Integer> position = ICON_PLACEMENTS.get(i);
+    int occupied = cardService.getReach(card) > 1 ? 1 : 0;
+    for (int i = 0; i < equipmentList.size() && i < ICON_PLACEMENTS.size() - occupied; i++) {
+      Pair<Integer, Integer> position = ICON_PLACEMENTS.get(i + occupied);
       iconPane.addIcon(position.getLeft(), position.getRight(), equipmentList.get(i), scale);
     }
   }

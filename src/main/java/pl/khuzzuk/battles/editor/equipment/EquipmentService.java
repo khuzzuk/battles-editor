@@ -35,7 +35,14 @@ public class EquipmentService {
   }
 
   public int getStrengthMod(Set<Equipment> equipment) {
-    return equipment.stream().mapToInt(Equipment::getStrength).sum();
+    return equipment.stream()
+        .filter(eq -> eq.getType() != null)
+        .collect(Collectors.groupingBy(Equipment::getType))
+        .values().stream()
+        .mapToInt(eqs -> eqs.stream()
+            .mapToInt(Equipment::getStrength)
+            .sum())
+        .max().orElse(0);
   }
 
   public int getToughnessMod(Set<Equipment> equipment) {
@@ -59,6 +66,17 @@ public class EquipmentService {
   }
 
   public int getArmorMod(Set<Equipment> equipment) {
-    return equipment.stream().mapToInt(Equipment::getArmor).sum();
+    return equipment.stream()
+        .filter(eq -> eq.getType() != null)
+        .collect(Collectors.groupingBy(Equipment::getType))
+        .values().stream()
+        .mapToInt(eqs -> eqs.stream()
+            .mapToInt(Equipment::getArmor)
+            .max().orElse(0))
+        .sum();
+  }
+
+  public int getReachMod(Set<Equipment> equipment) {
+    return equipment.stream().mapToInt(Equipment::getReach).max().orElse(0);
   }
 }

@@ -1,10 +1,15 @@
 package pl.khuzzuk.battles.editor.equipment;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(of = "name")
 public class Equipment {
     private String name;
+    private EquipmentType type;
     private String iconFile;
     private int movement;
     private int weaponSkills;
@@ -16,6 +21,7 @@ public class Equipment {
     private int attacks;
     private int leadership;
     private int armor;
+    private int reach;
     private int x;
     private int y;
     private int w;

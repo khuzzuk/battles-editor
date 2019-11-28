@@ -8,12 +8,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import pl.khuzzuk.battles.editor.equipment.Equipment;
+import pl.khuzzuk.battles.editor.equipment.EquipmentType;
 import pl.khuzzuk.battles.editor.nation.Nation;
 import pl.khuzzuk.battles.editor.repo.Repo;
 import pl.khuzzuk.battles.editor.settings.SettingsRepo;
@@ -31,6 +33,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
   private final ComboBox<Equipment> equipmentSelector;
 
   private TextField nameField = new TextField();
+  private ComboBox<EquipmentType> typeSelector = new ComboBox<>();
   private Button iconFile = new Button();
   private TextField movementField = new TextField();
   private TextField wsField = new TextField();
@@ -42,6 +45,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
   private TextField attacksField = new TextField();
   private TextField leadershipField = new TextField();
   private TextField armorField = new TextField();
+  private TextField reachField = new TextField();
 
   private TextField xField = new TextField();
   private TextField yField = new TextField();
@@ -58,42 +62,52 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
   @Override
   public void afterPropertiesSet() {
     iconPane = new IconPane(64, imageService);
+    typeSelector.getItems().setAll(EquipmentType.values());
 
-    place(new Label("Name"), 10, 10);
-    place(nameField, 100, 10);
-    place(iconFile, 10, 50);
-    place(new Label("Movement"), 10, 90);
-    place(movementField, 100, 90);
-    place(new Label("WS"), 10, 130);
-    place(wsField, 100, 130);
-    place(new Label("BS"), 10, 170);
-    place(bsField, 100, 170);
-    place(new Label("Strength"), 10, 210);
-    place(strengthField, 100, 210);
-    place(new Label("Toughness"), 10, 250);
-    place(toughnessField, 100, 250);
-    place(new Label("Wounds"), 10, 290);
-    place(woundsField, 100, 290);
-    place(new Label("Init"), 10, 330);
-    place(initiativeField, 100, 330);
-    place(new Label("Attacks"), 10, 370);
-    place(attacksField, 100, 370);
-    place(new Label("Leadership"), 10, 410);
-    place(leadershipField, 100, 410);
-    place(new Label("Armor"), 10, 450);
-    place(armorField, 100, 450);
+    VBox labels = new VBox();
+    labels.getChildren().add(new Label("Name"));
+    labels.getChildren().add(new Label("Type"));
+    labels.getChildren().add(new Label("Icon"));
+    labels.getChildren().add(new Label("Movement"));
+    labels.getChildren().add(new Label("WS"));
+    labels.getChildren().add(new Label("BS"));
+    labels.getChildren().add(new Label("Strength"));
+    labels.getChildren().add(new Label("Toughness"));
+    labels.getChildren().add(new Label("Wounds"));
+    labels.getChildren().add(new Label("Init"));
+    labels.getChildren().add(new Label("Attacks"));
+    labels.getChildren().add(new Label("Leadership"));
+    labels.getChildren().add(new Label("Armor"));
+    labels.getChildren().add(new Label("Reach"));
+    labels.getChildren().add(new Label("x"));
+    labels.getChildren().add(new Label("y"));
+    labels.getChildren().add(new Label("w"));
+    labels.getChildren().add(new Label("h"));
+    labels.getChildren().forEach(label -> ((Label)label).setPrefHeight(25));
 
-    place(new Label("x"), 15, 490);
-    place(xField, 40, 490);
-    place(new Label("y"), 15, 530);
-    place(yField, 40, 530);
-    place(new Label("w"), 15, 570);
-    place(wField, 40, 570);
-    place(new Label("h"), 15, 610);
-    place(hField, 40, 610);
+    VBox fields = new VBox();
+    fields.getChildren().add(nameField);
+    fields.getChildren().add(typeSelector);
+    fields.getChildren().add(iconFile);
+    fields.getChildren().add(movementField);
+    fields.getChildren().add(wsField);
+    fields.getChildren().add(bsField);
+    fields.getChildren().add(strengthField);
+    fields.getChildren().add(toughnessField);
+    fields.getChildren().add(woundsField);
+    fields.getChildren().add(initiativeField);
+    fields.getChildren().add(attacksField);
+    fields.getChildren().add(leadershipField);
+    fields.getChildren().add(armorField);
+    fields.getChildren().add(reachField);
+    fields.getChildren().add(xField);
+    fields.getChildren().add(yField);
+    fields.getChildren().add(wField);
+    fields.getChildren().add(hField);
+    fields.getChildren().add(saveButton);
 
-    place(saveButton, 20, 650);
-
+    place(labels, 10, 10);
+    place(fields, 100, 10);
     place(iconPane, 400, 10);
 
     saveButton.setOnAction(event -> save());
@@ -115,6 +129,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
     refresh();
 
     nameField.setText(equipment.getName());
+    typeSelector.setValue(equipment.getType());
     iconFile.setText(
         StringUtils.isBlank(equipment.getIconFile()) ? "Set icon" : equipment.getIconFile());
     movementField.setText("" + equipment.getMovement());
@@ -127,6 +142,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
     attacksField.setText("" + equipment.getAttacks());
     leadershipField.setText("" + equipment.getLeadership());
     armorField.setText("" + equipment.getArmor());
+    reachField.setText("" + equipment.getReach());
     xField.setText("" + equipment.getX());
     yField.setText("" + equipment.getY());
     wField.setText("" + equipment.getW());
@@ -144,8 +160,9 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
     }
   }
 
-  private void save() {
+  private void updateEquipment() {
     equipment.setName(nameField.getText());
+    equipment.setType(typeSelector.getValue());
     equipment.setIconFile(iconFilePath);
     equipment.setMovement(Integer.parseInt(movementField.getText()));
     equipment.setWeaponSkills(Integer.parseInt(wsField.getText()));
@@ -157,11 +174,15 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
     equipment.setAttacks(Integer.parseInt(attacksField.getText()));
     equipment.setLeadership(Integer.parseInt(leadershipField.getText()));
     equipment.setArmor(Integer.parseInt(armorField.getText()));
+    equipment.setReach(Integer.parseInt(reachField.getText()));
     equipment.setX(Integer.parseInt(xField.getText()));
     equipment.setY(Integer.parseInt(yField.getText()));
     equipment.setW(Integer.parseInt(wField.getText()));
     equipment.setH(Integer.parseInt(hField.getText()));
+  }
 
+  private void save() {
+    updateEquipment();
     repo.saveEquipment(equipment);
     equipmentSelector.getItems().setAll(repo.getEquipment());
     toMainMenu();
@@ -187,8 +208,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
     double ratio = ((double) w / (double) equipment.getW());
     int h = (int) (Integer.parseInt(hField.getText()) * ratio);
     hField.setText(h + "");
-    equipment.setW(w);
-    equipment.setH(h);
+    updateEquipment();
     refresh(equipment);
   }
 
@@ -197,8 +217,7 @@ public class EquipmentMenu extends DirectPane implements InitializingBean {
     double ratio = ((double) h / (double) equipment.getH());
     int w = (int) (Integer.parseInt(wField.getText()) * ratio);
     wField.setText(w + "");
-    equipment.setW(w);
-    equipment.setH(h);
+    updateEquipment();
     refresh(equipment);
   }
 }

@@ -66,4 +66,8 @@ public class CardService {
   public int getArmor(Card card) {
     return equipmentService.getArmorMod(equipmentService.findEquipment(card));
   }
+
+  public int getReach(Card card) {
+    return 1 + equipmentService.getReachMod(equipmentService.findEquipment(card));
+  }
 }
